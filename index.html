@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Fuelight 360: Synthetic Persona Review</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#005EB8;--blue-soft:#eaf2fb;--blue-line:#cfe0f3;--navy:#003865;--dark:#333F48;
+    --tab-accent:#ff5a13;--tab-accent-hover:#e65010;--tab-accent-soft:#fff4ee;
+    --yellow:#FDDA24;--panel:#F3F3F4;--panel2:#EDEEEF;--card:#ffffff;--text:#333F48;--muted:#727C84;
+    --line:#E2E3E4;--foot:#9AA2A8;--page-bg:#f8f7f5;--hero-bg:#f4f8fd;
+    --sev-high:#C0392B;--sev-high-bg:#fbeae8;--sev-med:#B8860B;--sev-med-bg:#fbf3e0;
+    --shadow:0 1px 3px rgba(0,0,0,.05);--shadow-lg:0 18px 40px rgba(0,0,0,.12);
+    --green:#1f8f60;--green-soft:#e8f7f0;--teal:#1a8a9b;--teal-soft:#e6f5f7;
+    --orange:#ff5a13;--orange-soft:#fff4ee;--red:#C0392B;--red-soft:#fbeae8;
+    --purple:#6a3fa0;--purple-soft:#f3eefb;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--page-bg);color:var(--text);font-family:'DM Sans',Arial,'Helvetica Neue',Helvetica,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+
+  .wrap{max-width:1440px;width:100%;margin-inline:auto;padding-inline:32px;}
+
+  @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+  .hero{padding:48px 48px 56px;position:relative;overflow:hidden;background:#000;min-height:220px;}
+  canvas#dots{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+  .hero-inner{max-width:1440px;margin:0 auto;padding-inline:32px;position:relative;z-index:1;}
+  .hero h1{font-size:40px;font-weight:800;color:#fff;letter-spacing:-.8px;line-height:1.18;margin-bottom:11px;opacity:0;transform:translateY(16px);animation:fadeUp .8s ease forwards .3s;}
+  .hero h1 em{font-style:normal;background:linear-gradient(90deg,#F40000,#FF560E,#6ACE7F,#6AC9CE);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .hero h1 .title-rest{color:#fff;-webkit-text-fill-color:#fff;background:none;}
+  .hero-sub{font-size:15.5px;color:rgba(255,255,255,.62);font-weight:400;line-height:1.6;max-width:760px;opacity:0;transform:translateY(12px);animation:fadeUp .8s ease forwards .5s;}
+  @media(max-width:760px){.hero{padding:32px 20px 40px}.hero h1{font-size:27px}}
+
+  .tabs-shell{position:sticky;top:0;z-index:110;background:#fff;border-bottom:1px solid #e6e7e9;transition:box-shadow .3s;}
+  .tabs-shell.stuck{box-shadow:0 2px 8px rgba(0,0,0,.08);}
+  .filters{display:flex;align-items:flex-end;flex-wrap:wrap;gap:6px 32px;margin:0;position:static;z-index:100;padding:14px 0;background:transparent;transition:background .3s, box-shadow .3s;}
+  .chip{position:relative;font-size:14.5px;font-weight:700;color:#6f7780;background:transparent;border:0;border-radius:0;padding:8px 2px 12px;cursor:pointer;transition:color .15s;}
+  .chip::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;border-radius:3px 3px 0 0;background:transparent;transition:background .15s;}
+  .chip:hover{color:#4e5863;background:transparent;}
+  .chip:focus-visible{outline:2px solid #ffb489;outline-offset:2px;border-radius:4px;}
+  .chip.active{color:#1f2933;}
+  .chip.active::after{background:var(--tab-accent);}
+
+  .sec-pad{padding:36px 0 70px;}
+
+  /* Content cards */
+  .section-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);font-weight:700;margin:0 0 20px;}
+  .content-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:36px 40px;margin-bottom:24px;box-shadow:var(--shadow);}
+  .content-card h2{margin:0 0 8px;font-size:22px;font-weight:800;color:#1a1a1a;letter-spacing:-.02em;line-height:1.2;}
+  .content-card h3{margin:20px 0 10px;font-size:16px;font-weight:700;color:#1a1a1a;letter-spacing:-.01em;}
+  .content-card p{margin:0 0 14px;font-size:15px;line-height:1.65;color:var(--text);}
+  .content-card ul{margin:0 0 14px;padding-left:18px;}
+  .content-card li{margin-bottom:6px;font-size:14.5px;line-height:1.6;color:var(--text);}
+  .content-card .highlight{padding:14px 18px;background:#f6f4ef;border-left:3px solid var(--tab-accent);border-radius:0 10px 10px 0;margin:16px 0;font-size:14px;line-height:1.6;color:#3d3d3d;}
+  .content-card .highlight strong{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;color:#1a1a1a;}
+
+  /* Persona table */
+  .persona-table-wrap{overflow-x:auto;margin:24px 0;border-radius:12px;border:1px solid var(--line);}
+  .persona-table{width:100%;border-collapse:collapse;font-size:13.5px;line-height:1.55;min-width:900px;}
+  .persona-table th{background:#f8f7f5;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:14px 16px;text-align:left;border-bottom:1px solid var(--line);position:sticky;top:0;}
+  .persona-table th:first-child{width:140px;min-width:140px;}
+  .persona-table td{padding:16px;border-bottom:1px solid #f0f0f0;vertical-align:top;color:var(--text);}
+  .persona-table tr:last-child td{border-bottom:none;}
+  .persona-table .persona-name{font-weight:700;color:#1a1a1a;white-space:nowrap;}
+  .persona-table .persona-role{font-size:11.5px;color:var(--muted);display:block;margin-top:2px;}
+  .persona-table .persona-tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 8px;border-radius:4px;margin-top:6px;}
+  .tag-exec{background:var(--red-soft);color:var(--red);}
+  .tag-ops{background:var(--orange-soft);color:var(--orange);}
+  .tag-analyst{background:var(--teal-soft);color:var(--teal);}
+
+  /* Gap matrix */
+  .gap-matrix{width:100%;border-collapse:collapse;font-size:12.5px;min-width:700px;}
+  .gap-matrix th{background:#f8f7f5;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:12px 10px;text-align:center;border-bottom:1px solid var(--line);}
+  .gap-matrix th:first-child{text-align:left;min-width:200px;}
+  .gap-matrix td{padding:10px;text-align:center;border-bottom:1px solid #f0f0f0;vertical-align:middle;}
+  .gap-matrix td:first-child{text-align:left;font-weight:600;color:#1a1a1a;}
+  .gap-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--teal);}
+  .gap-dot.primary{width:12px;height:12px;background:var(--orange);}
+
+  /* Prediction log */
+  .log-table-wrap{overflow-x:auto;margin:20px 0;border-radius:12px;border:1px solid var(--line);}
+  .log-table{width:100%;border-collapse:collapse;font-size:12.5px;line-height:1.5;min-width:1000px;}
+  .log-table th{background:#f8f7f5;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);}
+  .log-table td{padding:12px 14px;border-bottom:1px solid #f0f0f0;vertical-align:top;color:var(--text);}
+  .log-table tr:last-child td{border-bottom:none;}
+  .delta-badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:4px;}
+  .delta-correct{background:var(--green-soft);color:var(--green);}
+  .delta-under{background:var(--orange-soft);color:var(--orange);}
+  .delta-over{background:var(--purple-soft);color:var(--purple);}
+  .delta-wrong{background:var(--red-soft);color:var(--red);}
+  .delta-surprise{background:var(--teal-soft);color:var(--teal);}
+
+  /* Steps / Next actions */
+  .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:20px 0;}
+  .step-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;position:relative;overflow:hidden;}
+  .step-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;}
+  .step-card.now::before{background:var(--orange);}
+  .step-card.next::before{background:var(--teal);}
+  .step-card.later::before{background:var(--muted);}
+  .step-card .step-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px;}
+  .step-card.now .step-label{color:var(--orange);}
+  .step-card.next .step-label{color:var(--teal);}
+  .step-card.later .step-label{color:var(--muted);}
+  .step-card h4{margin:0 0 8px;font-size:15px;font-weight:700;color:#1a1a1a;}
+  .step-card p{margin:0;font-size:13px;line-height:1.55;color:var(--muted);}
+
+  /* Principles */
+  .principle-row{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid #f0f0f0;align-items:flex-start;}
+  .principle-row:last-child{border-bottom:none;}
+  .principle-num{width:32px;height:32px;border-radius:8px;background:var(--navy);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .principle-text{flex:1;}
+  .principle-text h4{margin:0 0 4px;font-size:14px;font-weight:700;color:#1a1a1a;}
+  .principle-text p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.55;}
+
+  /* Tab content */
+  .tab-content{display:none;}
+  .tab-content.active{display:block;}
+
+  /* Footer */
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em;font-size:19px;}
+  footer.ft{background:var(--panel);color:var(--muted);padding-block:42px;margin-top:20px;border-block-start:1px solid var(--line);}
+  footer.ft .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:18px;align-items:center;}
+  footer.ft .brand{color:var(--text);}
+  footer.ft small{color:var(--muted);font-size:11.5px;font-style:italic;}
+
+  .top{position:fixed;inset-block-end:26px;inset-inline-end:26px;width:46px;height:46px;border-radius:50%;background:var(--tab-accent);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:opacity .25s,transform .15s,background .15s;z-index:60;}
+  .top.show{opacity:1;pointer-events:auto;} .top:hover{transform:translateY(-2px);background:var(--tab-accent-hover);}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;}
+  .reveal.in{opacity:1;transform:none;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} .reveal{opacity:1;transform:none;transition:none;} }
+  @media(max-width:860px){.content-card{padding:24px 20px;} .steps-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="hero" id="top">
+  <canvas id="dots"></canvas>
+  <div class="hero-inner">
+    <h1><em>Fuelight 360:</em> <span class="title-rest">Synthetic Persona Review</span></h1>
+    <p class="hero-sub">Stress-testing the Bulk Edit Side Panel (CXP & Market) through 5 grounded personas before scheduling user-facing research. Identifying gaps in assumptions, surfacing design problems, and defining clear next steps for moderated and unmoderated testing.</p>
+    <p class="hero-sub" style="margin-top:8px;font-size:12px;opacity:1;transform:none;animation:none;color:rgba(255,255,255,.45);letter-spacing:.3px;">Assessment date: July 16, 2026</p>
+  </div>
+</div>
+
+<div class="tabs-shell" id="tabsShell">
+  <div class="wrap">
+    <div class="filters" id="filters" role="tablist" aria-label="Review sections">
+      <button class="chip active" data-tab="overview" role="tab" aria-selected="true" tabindex="0">Overview</button>
+      <button class="chip" data-tab="assessment" role="tab" aria-selected="false" tabindex="-1">Persona Assessment</button>
+      <button class="chip" data-tab="gaps" role="tab" aria-selected="false" tabindex="-1">Gap Analysis</button>
+      <button class="chip" data-tab="next-steps" role="tab" aria-selected="false" tabindex="-1">Next Steps & Testing Plan</button>
+      <button class="chip" data-tab="prediction-log" role="tab" aria-selected="false" tabindex="-1">Prediction Log</button>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: Overview -->
+<section class="sec-pad tab-content active" id="tab-overview">
+  <div class="wrap">
+
+    <div class="content-card reveal">
+      <h2>The Core Design Gap</h2>
+      <div class="highlight">
+        <strong>Thesis</strong>
+        The Bulk Edit panel presents <em>data</em> but not <em>decisions</em>. Every persona &mdash; regardless of seniority, literacy, or workflow &mdash; needs the same thing the tool doesn't provide: context that turns a number into a judgment call. "Is this good? Should I act? Can I defend it?"
+      </div>
+      <p>The tool solves the mechanical problem (change numbers in bulk) without solving the <strong>decision</strong> problem (why these numbers, what does it mean, and can I defend it). It's built for one user type: someone who already knows exactly what to change. Even that user finds it slow.</p>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>Method</h2>
+      <p>This assessment follows the <strong>Tier 1: Synthetic</strong> research method &mdash; an internal practice using AI persona agents grounded in real Fuelight discovery quotes to stress-test designs before investing in user-facing sessions.</p>
+      <h3>Steps Taken</h3>
+      <ol>
+        <li><strong>Feature audit</strong> &mdash; Read full source (~5,700 lines each) of Side Panel CXP and Market to document every control, interaction, and post-apply behavior</li>
+        <li><strong>Persona profiles</strong> &mdash; Extracted all 5 personas from the Persona Lab: roles, decision routines, pain points, data literacy, and Fuelight expectations</li>
+        <li><strong>Framework mapping</strong> &mdash; Grouped personas into 3 tiers: Executive Decision Makers, Operational Managers, Analytical Power Users</li>
+        <li><strong>Stress test</strong> &mdash; Ran each persona through the feature: "What would they do? What confuses them? What's missing?"</li>
+        <li><strong>Cross-reference</strong> &mdash; Built gap matrix identifying shared themes vs. persona-specific issues</li>
+        <li><strong>Synthesis</strong> &mdash; Distilled into patterns, challenges, and prioritised design principles</li>
+      </ol>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>Personas Used</h2>
+      <div class="persona-table-wrap">
+        <table class="persona-table">
+          <thead>
+            <tr>
+              <th>Persona</th>
+              <th>Role</th>
+              <th>Tier</th>
+              <th>Evaluation Lens</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="persona-name">Daniel</span><span class="persona-role">VP, Franchise Operations</span></td>
+              <td>Senior decision-maker, ABP owner, IC submitter</td>
+              <td><span class="persona-tag tag-exec">Executive</span></td>
+              <td>Can I trust and defend this output in 60 seconds?</td>
+            </tr>
+            <tr>
+              <td><span class="persona-name">Camila</span><span class="persona-role">Sr. Director, Finance</span></td>
+              <td>IC gatekeeper, E-rate owner, adoption validator</td>
+              <td><span class="persona-tag tag-exec">Executive</span></td>
+              <td>Can I audit the assumptions? Is this financially defensible?</td>
+            </tr>
+            <tr>
+              <td><span class="persona-name">Marco</span><span class="persona-role">Director, Franchise Operations</span></td>
+              <td>Core power user, DFR owner, runs tool weekly</td>
+              <td><span class="persona-tag tag-ops">Operational</span></td>
+              <td>Can I act on this fast enough before the window closes?</td>
+            </tr>
+            <tr>
+              <td><span class="persona-name">Sarah</span><span class="persona-role">Director, Media / IMX</span></td>
+              <td>Highest data literacy, methodology hawk</td>
+              <td><span class="persona-tag tag-analyst">Analytical</span></td>
+              <td>Is the math sound? Does it respect how media actually works?</td>
+            </tr>
+            <tr>
+              <td><span class="persona-name">Elena</span><span class="persona-role">Sr. Director, Strategy</span></td>
+              <td>LRP/ABP owner, portfolio trade-offs</td>
+              <td><span class="persona-tag tag-analyst">Analytical</span></td>
+              <td>Does this change the forward plan or just explain the past?</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TAB: Persona Assessment -->
+<section class="sec-pad tab-content" id="tab-assessment">
+  <div class="wrap">
+
+    <div class="content-card reveal">
+      <h2>Cross-Persona Assessment Table</h2>
+      <p>Three questions per persona: what they'd try to do, what would frustrate them, and what's missing from the current design.</p>
+      <div class="persona-table-wrap">
+        <table class="persona-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Daniel <span class="persona-role">VP Franchise Ops</span></th>
+              <th>Camila <span class="persona-role">Sr. Dir Finance</span></th>
+              <th>Marco <span class="persona-role">Dir Franchise Ops</span></th>
+              <th>Sarah <span class="persona-role">Dir Media/IMX</span></th>
+              <th>Elena <span class="persona-role">Sr. Dir Strategy</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>What would this user be trying to do?</strong></td>
+              <td>Review the <em>output</em> of bulk edits. Take the scenario into an MBR or IC submission and defend it in under 60 seconds without an analyst.</td>
+              <td>Audit what assumptions a rule rests on. Validate the YTG/Scenario projections are financially credible enough to approve an IC reserve request.</td>
+              <td>Open the panel mid-meeting, quickly adjust projections (+2% Distribution for Fanta at Asda), stack a few rules, save, and move on before the activation window closes.</td>
+              <td>Model what-if scenarios for media channel reallocation. Validate whether the math respects adstock and diminishing returns. Compare scenarios side-by-side.</td>
+              <td>Scenario modelling for the annual plan &mdash; "shift portfolio weight from Sprite to Coke Zero across H2." Feed the result into the LRP/ABP cycle.</td>
+            </tr>
+            <tr>
+              <td><strong>What would confuse or frustrate them?</strong></td>
+              <td>Wall of numbers with no narrative. Rules tracker says "Adjust +10%" not "This closes 2.3% of the volume gap." No ABP variance. No export for IC.</td>
+              <td>No audit trail per rule &mdash; no benchmark, no data source. Corner badges (A/F/C/B) are cryptic. "Was X" shows vs. session baseline, not vs. target. No confidence indicators.</td>
+              <td>5-step wizard = 8+ interactions for a simple change. Panel auto-closes after apply. No rule reuse. No mobile path. Historicals and projections look the same.</td>
+              <td>"Adjust +10%" is naive flat math for media with adstock/saturation. No link to Curves tab. No scenario comparison. No methodology per driver.</td>
+              <td>Only 4 months of time scope &mdash; she thinks multi-year. No "shift from Brand A to B" action. Scenarios vanish on refresh. Driver hierarchy is tactical, not strategic.</td>
+            </tr>
+            <tr>
+              <td><strong>What's missing?</strong></td>
+              <td>Plain-English scenario summary. ABP/target variance column. Read-only review mode. One-click IC export (PDF/slide with assumptions).</td>
+              <td>Rule justification field. Confidence indicators per driver. Exportable audit log. Sensitivity flags. "Vs. ABP" column, not just "vs. before."</td>
+              <td>Quick-apply templates (save/reuse). Keep-panel-open mode. Impact summary before closing. Mobile-responsive layout. Conditional formatting (RAG indicators).</td>
+              <td>Non-linear/curve-aware adjustments. Scenario comparison view. Driver methodology card. Confidence bands. Cross-channel synergy flags. Data dictionary tooltips.</td>
+              <td>Multi-year time horizon. Portfolio rebalancing as first-class action. Forward impact on next year. Named/shared scenario library. Brand equity overlay.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>Common Patterns</h2>
+      <div class="principle-row">
+        <div class="principle-num">1</div>
+        <div class="principle-text">
+          <h4>Everyone needs the "so what" &mdash; not just the "what changed"</h4>
+          <p>Every persona needs to understand the <em>meaning</em> of edits in their own terms. The tool stops at the mechanical layer and never rises to the narrative layer.</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num">2</div>
+        <div class="principle-text">
+          <h4>Nobody trusts a number they can't trace back to a reason</h4>
+          <p>The tool lets you apply +10% but never asks or records <em>why</em> +10%. It's a calculator without a receipt.</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num">3</div>
+        <div class="principle-text">
+          <h4>The tool is a single-session scratch pad, not a planning system</h4>
+          <p>Scenarios live in sessionStorage and disappear on refresh. Can't name, share, compare, or build on them over time.</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num">4</div>
+        <div class="principle-text">
+          <h4>Speed vs. rigour is a false trade-off the design doesn't resolve</h4>
+          <p>Marco needs 3 clicks. Camila needs a full audit trail. These aren't opposed &mdash; they're different moments in the same workflow. Let Marco apply fast, let Camila audit later.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TAB: Gap Analysis -->
+<section class="sec-pad tab-content" id="tab-gaps">
+  <div class="wrap">
+
+    <div class="content-card reveal">
+      <h2>Cross-Persona Gap Matrix</h2>
+      <p>Orange dots = primary gap for that persona. Teal dots = relevant but secondary.</p>
+      <div class="persona-table-wrap">
+        <table class="gap-matrix">
+          <thead>
+            <tr>
+              <th>Gap Theme</th>
+              <th>Daniel</th>
+              <th>Camila</th>
+              <th>Marco</th>
+              <th>Sarah</th>
+              <th>Elena</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Executive summary / narrative</td><td><span class="gap-dot primary"></span></td><td><span class="gap-dot"></span></td><td></td><td></td><td></td></tr>
+            <tr><td>Assumption audit trail</td><td></td><td><span class="gap-dot primary"></span></td><td></td><td><span class="gap-dot"></span></td><td></td></tr>
+            <tr><td>ABP / target variance view</td><td><span class="gap-dot primary"></span></td><td><span class="gap-dot primary"></span></td><td><span class="gap-dot"></span></td><td></td><td><span class="gap-dot"></span></td></tr>
+            <tr><td>Speed / fewer interaction steps</td><td></td><td></td><td><span class="gap-dot primary"></span></td><td></td><td></td></tr>
+            <tr><td>Mobile access</td><td></td><td></td><td><span class="gap-dot primary"></span></td><td></td><td></td></tr>
+            <tr><td>Non-linear / curve-aware math</td><td></td><td></td><td></td><td><span class="gap-dot primary"></span></td><td></td></tr>
+            <tr><td>Scenario comparison</td><td></td><td></td><td></td><td><span class="gap-dot primary"></span></td><td><span class="gap-dot"></span></td></tr>
+            <tr><td>Multi-year time horizon</td><td></td><td></td><td></td><td></td><td><span class="gap-dot primary"></span></td></tr>
+            <tr><td>Portfolio rebalancing</td><td></td><td></td><td></td><td></td><td><span class="gap-dot primary"></span></td></tr>
+            <tr><td>Confidence / sensitivity indicators</td><td><span class="gap-dot"></span></td><td><span class="gap-dot primary"></span></td><td></td><td><span class="gap-dot primary"></span></td><td></td></tr>
+            <tr><td>Shared / persistent scenarios</td><td></td><td></td><td></td><td><span class="gap-dot"></span></td><td><span class="gap-dot primary"></span></td></tr>
+            <tr><td>Rule justification / rationale</td><td><span class="gap-dot"></span></td><td><span class="gap-dot primary"></span></td><td></td><td></td><td></td></tr>
+            <tr><td>Quick-repeat / templates</td><td></td><td></td><td><span class="gap-dot primary"></span></td><td></td><td></td></tr>
+            <tr><td>IC export artifact</td><td><span class="gap-dot primary"></span></td><td><span class="gap-dot primary"></span></td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>Design Principles (Derived from Gaps)</h2>
+      <div class="principle-row">
+        <div class="principle-num">1</div>
+        <div class="principle-text">
+          <h4>Every number needs a reference point</h4>
+          <p>Show vs. target, vs. last year, vs. plan &mdash; never just the raw value.</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num">2</div>
+        <div class="principle-text">
+          <h4>Every edit needs a rationale</h4>
+          <p>Capture <em>why</em>, not just <em>what</em>. Even a one-line text field transforms auditability.</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num">3</div>
+        <div class="principle-text">
+          <h4>The operator and the decision-maker see the same data differently</h4>
+          <p>Build one table, two modes: edit mode (Marco) and review mode (Daniel/Camila).</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num">4</div>
+        <div class="principle-text">
+          <h4>Speed and rigour are sequential, not competing</h4>
+          <p>Fast to apply (Marco), auditable after the fact (Camila).</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num">5</div>
+        <div class="principle-text">
+          <h4>The tool should produce an artifact, not just a state</h4>
+          <p>Scenarios need names, exports, and shareable summaries &mdash; not just sessionStorage.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TAB: Next Steps & Testing Plan -->
+<section class="sec-pad tab-content" id="tab-next-steps">
+  <div class="wrap">
+
+    <div class="content-card reveal">
+      <h2>Priority Actions Before User Testing</h2>
+      <div class="steps-grid">
+        <div class="step-card now">
+          <div class="step-label">Solve Now</div>
+          <h4>Conditional formatting</h4>
+          <p>Red/amber/green health indicators on cells so users instantly know if a number is on-track or off.</p>
+        </div>
+        <div class="step-card now">
+          <div class="step-label">Solve Now</div>
+          <h4>Variance-to-target column</h4>
+          <p>Show "vs. ABP" delta inline. Not just "was X" but "plan was Y, now Z."</p>
+        </div>
+        <div class="step-card now">
+          <div class="step-label">Solve Now</div>
+          <h4>Rule rationale field</h4>
+          <p>One free-text input on Apply: "Based on H1 DFR performance." Transforms audit trail instantly.</p>
+        </div>
+        <div class="step-card now">
+          <div class="step-label">Solve Now</div>
+          <h4>Impact summary on apply</h4>
+          <p>Before panel closes: "YTG moves from 91.2 to 93.0 (+2.0%). Closes 1.4% of ABP gap."</p>
+        </div>
+        <div class="step-card next">
+          <div class="step-label">Solve Next</div>
+          <h4>Quick-apply templates</h4>
+          <p>Save and reuse recent rule configs. Makes Marco's weekly routine viable at speed.</p>
+        </div>
+        <div class="step-card next">
+          <div class="step-label">Solve Next</div>
+          <h4>Scenario naming & persistence</h4>
+          <p>Named, shareable scenarios beyond sessionStorage. Unlocks Elena's planning and Sarah's comparison needs.</p>
+        </div>
+        <div class="step-card next">
+          <div class="step-label">Solve Next</div>
+          <h4>Executive summary card</h4>
+          <p>Auto-generated one-line narrative above the table: "This scenario shifts YTG by X, closing Z% of ABP gap."</p>
+        </div>
+        <div class="step-card later">
+          <div class="step-label">Solve for Scale</div>
+          <h4>Curve-aware adjustments</h4>
+          <p>Non-linear math respecting adstock and diminishing returns for media channels.</p>
+        </div>
+        <div class="step-card later">
+          <div class="step-label">Solve for Scale</div>
+          <h4>Multi-year horizon & portfolio rebalancing</h4>
+          <p>Extend beyond current quarter. "Shift from Brand A to B" as a first-class operation.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>Testing Plan: Moderated Sessions</h2>
+      <div class="highlight">
+        <strong>When to use</strong>
+        Executive Decision Makers (Daniel, Camila) and complex Analytical workflows (Sarah, Elena). These users need follow-up probing to understand <em>why</em> they react the way they do.
+      </div>
+      <h3>Session Structure (45 min)</h3>
+      <ol>
+        <li><strong>Context setting (5 min)</strong> &mdash; Brief on scenario: "You're preparing for the Monthly Business Review. A colleague applied these bulk edits yesterday."</li>
+        <li><strong>Task 1: Comprehension (10 min)</strong> &mdash; "Look at this table. What happened? Is the scenario on track?"</li>
+        <li><strong>Task 2: Action (15 min)</strong> &mdash; "Apply a +5% adjustment to Digital Media for Coca-Cola across Q3. Walk me through your thinking."</li>
+        <li><strong>Task 3: Validation (10 min)</strong> &mdash; "Would you sign off on this scenario for IC submission? What's missing?"</li>
+        <li><strong>Debrief (5 min)</strong> &mdash; "What would you change about this experience?"</li>
+      </ol>
+      <h3>Hypotheses to Validate</h3>
+      <ul>
+        <li>H1: Users cannot determine "on track vs. off track" from the current table without mental arithmetic</li>
+        <li>H2: The 5-step wizard creates friction that discourages repeated use</li>
+        <li>H3: Executives will not use the output for IC without a narrative summary</li>
+        <li>H4: Finance will block adoption without assumption transparency</li>
+      </ul>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>Testing Plan: Unmoderated Sessions</h2>
+      <div class="highlight">
+        <strong>When to use</strong>
+        Operational Managers (Marco) and repeat-use workflows. These users reveal friction through time-on-task and error rates, not verbal explanation.
+      </div>
+      <h3>Task Script (Maze/UserTesting.com)</h3>
+      <ol>
+        <li><strong>Task 1:</strong> "Find the YTG value for Coca-Cola Digital Media. Is it above or below the annual target?" (measures: can they find it? do they know if it's good?)</li>
+        <li><strong>Task 2:</strong> "Increase Digital Media spend by 5% for July and August only." (measures: time-on-task, error rate, abandonment)</li>
+        <li><strong>Task 3:</strong> "You just applied a rule. What changed? Summarize in one sentence." (measures: comprehension of post-apply state)</li>
+        <li><strong>Task 4:</strong> "Apply the same rule you just used, but for Sprite this time." (measures: discoverability of repeat/template flow)</li>
+      </ol>
+      <h3>Success Metrics</h3>
+      <ul>
+        <li>Task 2 completion in under 90 seconds (current estimate: 3+ minutes)</li>
+        <li>Task 3 accuracy: user can correctly state the direction of change</li>
+        <li>Task 4: fewer than 50% of users re-configure from scratch (indicates template need)</li>
+        <li>SUS score above 68 (current predicted baseline: 55-60)</li>
+      </ul>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>Recruiting Guide</h2>
+      <div class="persona-table-wrap">
+        <table class="persona-table">
+          <thead>
+            <tr><th>Tier</th><th>Target Participants</th><th>Screener Criteria</th><th>Session Type</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="persona-tag tag-exec">Executive</span></td>
+              <td>2-3 participants (Daniel/Camila proxies)</td>
+              <td>VP+ in commercial ops or finance at FMCG company. Makes or approves investment allocation decisions. Does NOT operate analytical tools daily.</td>
+              <td>Moderated, 45 min</td>
+            </tr>
+            <tr>
+              <td><span class="persona-tag tag-ops">Operational</span></td>
+              <td>3-4 participants (Marco proxies)</td>
+              <td>Director-level ops/commercial. Uses planning tools weekly. Manages trade investment or media pacing. Time-pressured decision maker.</td>
+              <td>Unmoderated + 1 moderated</td>
+            </tr>
+            <tr>
+              <td><span class="persona-tag tag-analyst">Analytical</span></td>
+              <td>2-3 participants (Sarah/Elena proxies)</td>
+              <td>Media/strategy director. Comfortable with attribution models, scenario planning, or MMM. Will challenge methodology.</td>
+              <td>Moderated, 60 min</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TAB: Prediction Log -->
+<section class="sec-pad tab-content" id="tab-prediction-log">
+  <div class="wrap">
+
+    <div class="content-card reveal">
+      <h2>Synthetic Prediction Log</h2>
+      <p>After each real user test, log what the persona predicted vs. what the user actually did. The delta becomes the persona improvement signal. Track accuracy over time to validate and sharpen the synthetic models.</p>
+
+      <h3>Delta Types</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 20px;">
+        <span class="delta-badge delta-correct">Correct</span>
+        <span class="delta-badge delta-under">Underestimated</span>
+        <span class="delta-badge delta-over">Overestimated</span>
+        <span class="delta-badge delta-wrong">Wrong Axis</span>
+        <span class="delta-badge delta-surprise">Surprising</span>
+      </div>
+
+      <div class="log-table-wrap">
+        <table class="log-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Feature / Screen</th>
+              <th>Persona</th>
+              <th>Predicted Behavior</th>
+              <th>Actual Behavior</th>
+              <th>Delta</th>
+              <th>Persona Update Needed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color:var(--muted);font-style:italic;">example</td>
+              <td>Side Panel (Market)</td>
+              <td>Marco</td>
+              <td>Would skip methodology, apply in 3 clicks</td>
+              <td>Actually read driver hierarchy carefully before committing</td>
+              <td><span class="delta-badge delta-under">Underestimated</span></td>
+              <td>Add: "Marco validates driver selection even under time pressure"</td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);font-style:italic;">example</td>
+              <td>Side Panel (CXP)</td>
+              <td>Camila</td>
+              <td>Would block sign-off without full audit trail</td>
+              <td>Approved based on "was X" annotation alone for in-year tweaks</td>
+              <td><span class="delta-badge delta-over">Overestimated</span></td>
+              <td>Adjust: Trust bar is contextual &mdash; lower for tweaks, higher for IC</td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);font-style:italic;">example</td>
+              <td>Table view</td>
+              <td>Daniel</td>
+              <td>Would ignore weekly columns entirely</td>
+              <td>Scrolled through weeks looking for a specific dip mentioned in a meeting</td>
+              <td><span class="delta-badge delta-wrong">Wrong Axis</span></td>
+              <td>Add: "Daniel uses tables to validate a specific signal, not discover patterns"</td>
+            </tr>
+            <tr style="background:#fafaf8;">
+              <td colspan="7" style="text-align:center;color:var(--muted);font-style:italic;padding:24px;">Add rows after each real user testing session...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>How to Use This Log</h2>
+      <div class="principle-row">
+        <div class="principle-num">1</div>
+        <div class="principle-text">
+          <h4>After each real test</h4>
+          <p>Fill 3-5 rows per session. Mark "Correct" predictions too &mdash; they validate the persona model.</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num">2</div>
+        <div class="principle-text">
+          <h4>Monthly review (or every 5 sessions)</h4>
+          <p>Filter by Delta &ne; Correct. Look for repeating patterns per persona. Update profiles in Persona Lab.</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num">3</div>
+        <div class="principle-text">
+          <h4>Quarterly scoring</h4>
+          <p>Score each persona: % Correct out of total predictions. Below 60% accuracy = structural rewrite needed.</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num">4</div>
+        <div class="principle-text">
+          <h4>The compounding effect</h4>
+          <p>Each real test makes the next synthetic review more accurate. The gap between prediction and reality <em>is</em> the learning.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="ft">
+  <div class="wrap">
+    <span class="brand">Fuelight 360</span>
+    <small>Classified &ndash; Confidential</small>
+  </div>
+</footer>
+
+<button class="top" id="toTop" aria-label="Back to top">&#8593;</button>
+
+<script>
+(function(){
+  const c=document.getElementById('dots'),ctx=c.getContext('2d');
+  let w,h;const colors=['#F40000','#FF560E','#6ACE7F','#6AC9CE','#B59E74'];
+  let mx=.5,my=.5;let mouseInside=false;const N=180;let particles=[];
+  function resize(){w=c.width=c.offsetWidth;h=c.height=c.offsetHeight;if(!particles.length)init();else for(const p of particles){p.x=Math.random()*w;p.y=Math.random()*h}}
+  function init(){particles=[];for(let i=0;i<N;i++){const angle=Math.random()*Math.PI*2;const speed=0.05+Math.random()*0.05;particles.push({x:Math.random()*w,y:Math.random()*h,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,baseSpeed:speed,r:Math.random()*1.8+1.0,ci:Math.floor(Math.random()*colors.length),baseA:Math.random()*.30+.22,phase:Math.random()*Math.PI*2,driftAngle:Math.random()*Math.PI*2});}}
+  resize();window.addEventListener('resize',()=>{w=c.width=c.offsetWidth;h=c.height=c.offsetHeight});
+  c.parentElement.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();mx=(e.clientX-r.left)/w;my=(e.clientY-r.top)/h;mouseInside=true});
+  c.parentElement.addEventListener('mouseleave',()=>{mouseInside=false});
+  let t=0;const MIN_SPEED=0.03;const MAX_SPEED=0.22;
+  function draw(){ctx.clearRect(0,0,w,h);const mxp=mx*w,myp=my*h;
+    for(let i=0;i<particles.length;i++){const p=particles[i];
+      p.driftAngle+=(Math.random()-.5)*.02;p.vx+=Math.cos(p.driftAngle)*.003;p.vy+=Math.sin(p.driftAngle)*.003;
+      p.vx+=Math.sin(t*.5+p.phase)*.002;p.vy+=Math.cos(t*.4+p.phase*.7)*.002;
+      if(mouseInside){const dx=mxp-p.x,dy=myp-p.y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<80&&dist>0.1){const force=(1-dist/80)*.25;p.vx-=(dx/dist)*force;p.vy-=(dy/dist)*force;}}
+      p.vx*=.985;p.vy*=.985;const speed=Math.sqrt(p.vx*p.vx+p.vy*p.vy);
+      if(speed<MIN_SPEED&&speed>0.001){p.vx=(p.vx/speed)*MIN_SPEED;p.vy=(p.vy/speed)*MIN_SPEED;}
+      else if(speed<0.001){const a=Math.random()*Math.PI*2;p.vx=Math.cos(a)*p.baseSpeed;p.vy=Math.sin(a)*p.baseSpeed;}
+      else if(speed>MAX_SPEED){p.vx=(p.vx/speed)*MAX_SPEED;p.vy=(p.vy/speed)*MAX_SPEED;}
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<-30)p.x=w+30;if(p.x>w+30)p.x=-30;if(p.y<-30)p.y=h+30;if(p.y>h+30)p.y=-30;
+      let inf=0;if(mouseInside){const dx=mxp-p.x,dy=myp-p.y,dist=Math.sqrt(dx*dx+dy*dy);inf=Math.max(0,1-dist/(w*.22));}
+      ctx.globalAlpha=p.baseA+inf*.4;ctx.fillStyle=colors[p.ci];
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r+inf*1.5,0,Math.PI*2);ctx.fill();}
+    ctx.globalAlpha=1;t+=.012;requestAnimationFrame(draw)}
+  draw()
+})();
+
+// Tab navigation
+(function(){
+  const filters = document.getElementById('filters');
+  const tabs = document.querySelectorAll('.tab-content');
+
+  function switchTab(tabId){
+    filters.querySelectorAll('.chip').forEach(c => {
+      const isActive = c.getAttribute('data-tab') === tabId;
+      c.classList.toggle('active', isActive);
+      c.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      c.setAttribute('tabindex', isActive ? '0' : '-1');
+    });
+    tabs.forEach(t => {
+      t.classList.toggle('active', t.id === 'tab-' + tabId);
+    });
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  filters.addEventListener('click', function(e){
+    const chip = e.target.closest('.chip');
+    if(!chip || !chip.getAttribute('data-tab')) return;
+    switchTab(chip.getAttribute('data-tab'));
+  });
+
+  filters.addEventListener('keydown', function(e){
+    const chip = e.target.closest('.chip');
+    if(!chip) return;
+    const chips = Array.from(filters.querySelectorAll('.chip'));
+    const idx = chips.indexOf(chip);
+    let nextIdx = idx;
+    if(e.key === 'ArrowRight') nextIdx = (idx + 1) % chips.length;
+    else if(e.key === 'ArrowLeft') nextIdx = (idx - 1 + chips.length) % chips.length;
+    else return;
+    e.preventDefault();
+    chips[nextIdx].focus();
+    switchTab(chips[nextIdx].getAttribute('data-tab'));
+  });
+
+  // Hash-based tab on load
+  const h = (location.hash || '').replace('#','');
+  if(h && document.getElementById('tab-' + h)) switchTab(h);
+})();
+
+// Scroll reveal
+(function(){
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if(en.isIntersecting){ en.target.classList.add('in'); observer.unobserve(en.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+})();
+
+// Back to top
+(function(){
+  const toTop = document.getElementById('toTop');
+  window.addEventListener('scroll', () => {
+    toTop.classList.toggle('show', window.scrollY > 600);
+  }, { passive: true });
+  toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+})();
+
+// Sticky shadow
+(function(){
+  const shell = document.getElementById('tabsShell');
+  const sentinel = document.createElement('div');
+  sentinel.style.cssText = 'height:1px;margin-bottom:-1px;pointer-events:none;';
+  shell.parentNode.insertBefore(sentinel, shell);
+  new IntersectionObserver(entries => {
+    shell.classList.toggle('stuck', !entries[0].isIntersecting);
+  }, { threshold: 0 }).observe(sentinel);
+})();
+</script>
+</body>
+</html>
