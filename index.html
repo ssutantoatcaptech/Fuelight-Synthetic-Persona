@@ -515,8 +515,91 @@
 <section class="sec-pad tab-content" id="tab-next-steps">
   <div class="wrap">
 
+    <div class="content-card reveal" style="border-left:3px solid var(--tab-accent);">
+      <h2 style="font-size:16px;margin-bottom:10px;">Scope</h2>
+      <p style="margin:0;font-size:14px;line-height:1.6;">This testing plan covers <strong>Quick Edit (Bulk Edit Side Panel)</strong> only. Other features &mdash; Scenario Management, Date Picker, Optimiser Constraints, Summary Page Enhancements &mdash; follow their own testing tracks and are not included here.</p>
+    </div>
+
     <div class="content-card reveal">
-      <h2>Priority Actions Before User Testing</h2>
+      <h2>Testing Methodology</h2>
+      <p>Three-tier research approach. Each tier builds on the one before it &mdash; synthetic first, then validate with real users at increasing fidelity.</p>
+      <div class="persona-table-wrap">
+        <table class="persona-table" style="min-width:700px;">
+          <thead>
+            <tr><th>Tier</th><th>Method</th><th>When to Use</th><th>How to Run</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1 &middot; Synthetic</strong></td>
+              <td>AI persona review agent (internal)</td>
+              <td>Before any user-facing test. Catch gaps in assumptions.</td>
+              <td>
+                <ul style="margin:0;padding-left:16px;">
+                  <li>Define 3+ personas grounded in real user data</li>
+                  <li>Run each major design through personas before scheduling sessions</li>
+                  <li>Ask: What would they do? What confuses them? What's missing?</li>
+                  <li>Log synthetic predictions vs. actual &mdash; gap improves personas over time</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>2 &middot; Unmoderated</strong></td>
+              <td>User Testing (ideal) or Email (send prototype + questions)</td>
+              <td>Specific answerable questions, quick feedback. A/B, preference tests, labeling comprehension.</td>
+              <td>
+                <ul style="margin:0;padding-left:16px;">
+                  <li>Task framing is everything &mdash; specific scenario, clear starting point, no leading language</li>
+                  <li>5&ndash;8 participants is usually enough to see patterns</li>
+                  <li>Follow up with moderated if results are surprising or contradictory</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>3 &middot; Moderated</strong></td>
+              <td>Scheduled call (Teams)</td>
+              <td>Novel flow, high-stakes epic, alignment with value or priority needed. When unmoderated results leave an open question.</td>
+              <td>
+                <ul style="margin:0;padding-left:16px;">
+                  <li>Task-based, not demo-based &mdash; give users a scenario and let them drive</li>
+                  <li>Think-aloud protocol &mdash; ask them to narrate what they're seeing and expecting</li>
+                  <li>Observer notes, not just recording &mdash; designate one person to capture quotes in real time</li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>Quick Edit: Testing Status</h2>
+      <div class="persona-table-wrap">
+        <table class="persona-table" style="min-width:600px;">
+          <thead>
+            <tr><th>Tester</th><th>Title</th><th>Test Type</th><th>Scheduled</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Maq Ndebele</strong></td>
+              <td>Simulating Growth &amp; Revenue Manager, CCEP</td>
+              <td>Moderated</td>
+              <td>Thursday, July 9, 6am ET</td>
+              <td><span class="delta-badge delta-correct">Complete</span></td>
+            </tr>
+            <tr>
+              <td><strong>Max Wendler</strong></td>
+              <td>Simulating Growth &amp; Revenue Manager, CCEP</td>
+              <td>Moderated</td>
+              <td>&mdash;</td>
+              <td><span class="delta-badge delta-under">To Be Scheduled</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>Priority Actions from Synthetic Review</h2>
       <div class="steps-grid">
         <div class="step-card now">
           <div class="step-label">Solve Now</div>
@@ -567,10 +650,10 @@
     </div>
 
     <div class="content-card reveal">
-      <h2>Testing Plan: Moderated Sessions</h2>
+      <h2>Moderated Session Design</h2>
       <div class="highlight">
         <strong>When to use</strong>
-        Executive Decision Makers (Daniel, Camila) and complex Analytical workflows (Sarah, Elena). These users need follow-up probing to understand <em>why</em> they react the way they do.
+        Novel flow, high-stakes epic, or when alignment with value/priority is needed. Protects for decisions that require the "why," not just the "what."
       </div>
       <h3>Session Structure (45 min)</h3>
       <ol>
@@ -590,12 +673,12 @@
     </div>
 
     <div class="content-card reveal">
-      <h2>Testing Plan: Unmoderated Sessions</h2>
+      <h2>Unmoderated Session Design</h2>
       <div class="highlight">
         <strong>When to use</strong>
-        Operational Managers (Marco) and repeat-use workflows. These users reveal friction through time-on-task and error rates, not verbal explanation.
+        Specific, bounded questions that need an answer faster than a scheduled session allows. Good for A/B tests, preference tests, comprehension checks, and labeling validation.
       </div>
-      <h3>Task Script (Maze/UserTesting.com)</h3>
+      <h3>Task Script</h3>
       <ol>
         <li><strong>Task 1:</strong> "Find the YTG value for Coca-Cola Digital Media. Is it above or below the annual target?" (measures: can they find it? do they know if it's good?)</li>
         <li><strong>Task 2:</strong> "Increase Digital Media spend by 5% for July and August only." (measures: time-on-task, error rate, abandonment)</li>
@@ -607,39 +690,8 @@
         <li>Task 2 completion in under 90 seconds (current estimate: 3+ minutes)</li>
         <li>Task 3 accuracy: user can correctly state the direction of change</li>
         <li>Task 4: fewer than 50% of users re-configure from scratch (indicates template need)</li>
-        <li>SUS score above 68 (current predicted baseline: 55-60)</li>
+        <li>SUS score above 68 (current predicted baseline: 55&ndash;60)</li>
       </ul>
-    </div>
-
-    <div class="content-card reveal">
-      <h2>Recruiting Guide</h2>
-      <div class="persona-table-wrap">
-        <table class="persona-table">
-          <thead>
-            <tr><th>Tier</th><th>Target Participants</th><th>Screener Criteria</th><th>Session Type</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="persona-tag tag-exec">Executive</span></td>
-              <td>2-3 participants (Daniel/Camila proxies)</td>
-              <td>VP+ in commercial ops or finance at FMCG company. Makes or approves investment allocation decisions. Does NOT operate analytical tools daily.</td>
-              <td>Moderated, 45 min</td>
-            </tr>
-            <tr>
-              <td><span class="persona-tag tag-ops">Operational</span></td>
-              <td>3-4 participants (Marco proxies)</td>
-              <td>Director-level ops/commercial. Uses planning tools weekly. Manages trade investment or media pacing. Time-pressured decision maker.</td>
-              <td>Unmoderated + 1 moderated</td>
-            </tr>
-            <tr>
-              <td><span class="persona-tag tag-analyst">Analytical</span></td>
-              <td>2-3 participants (Sarah/Elena proxies)</td>
-              <td>Media/strategy director. Comfortable with attribution models, scenario planning, or MMM. Will challenge methodology.</td>
-              <td>Moderated, 60 min</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
 
   </div>
