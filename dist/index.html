@@ -198,13 +198,18 @@
   /* Side sheet */
   .side-sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s;}
   .side-sheet-overlay.open{opacity:1;pointer-events:auto;}
-  .side-sheet{position:fixed;top:0;right:0;bottom:0;width:480px;max-width:90vw;background:#fff;z-index:210;box-shadow:-4px 0 24px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  .side-sheet{position:fixed;top:0;right:0;bottom:0;width:480px;max-width:90vw;background:#fff;z-index:210;box-shadow:-4px 0 24px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
   .side-sheet.open{transform:translateX(0);}
-  .side-sheet-header{position:sticky;top:0;background:#fff;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line);}
+  .side-sheet-header{position:sticky;top:0;background:#fff;z-index:5;padding:20px 24px 0;border-bottom:1px solid var(--line);}
+  .side-sheet-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
   .side-sheet-header h2{margin:0;font-size:18px;font-weight:700;color:var(--dark);}
   .side-sheet-close{width:32px;height:32px;border-radius:6px;border:none;background:var(--panel);color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
   .side-sheet-close:hover{background:var(--panel2);color:var(--text);}
-  .side-sheet-body{padding:24px;}
+  .side-sheet-nav{display:flex;gap:4px;padding-bottom:12px;overflow-x:auto;}
+  .side-sheet-nav button{font-size:12px;font-weight:600;padding:6px 12px;border:none;border-radius:5px;cursor:pointer;white-space:nowrap;transition:all .15s;background:transparent;color:var(--muted);}
+  .side-sheet-nav button:hover{background:var(--panel);color:var(--text);}
+  .side-sheet-nav button.active{background:var(--tab-accent-soft);color:var(--tab-accent);}
+  .side-sheet-body{padding:24px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;}
   .side-sheet-body .persona-card{margin-bottom:20px;border:1px solid var(--line);border-radius:12px;overflow:hidden;}
   .side-sheet-body .persona-card-top{flex-direction:column;}
   .side-sheet-body .persona-card-identity{min-width:auto;}
@@ -786,16 +791,25 @@
 <div class="side-sheet-overlay" id="sheetOverlay"></div>
 <div class="side-sheet" id="personaSheet">
   <div class="side-sheet-header">
-    <h2>Persona Profiles</h2>
-    <button class="side-sheet-close" id="sheetClose" aria-label="Close">&times;</button>
+    <div class="side-sheet-header-top">
+      <h2>Persona Profiles</h2>
+      <button class="side-sheet-close" id="sheetClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="side-sheet-nav" id="sheetNav">
+      <button data-target="sp-daniel" class="active">Daniel</button>
+      <button data-target="sp-camila">Camila</button>
+      <button data-target="sp-marco">Marco</button>
+      <button data-target="sp-sarah">Sarah</button>
+      <button data-target="sp-elena">Elena</button>
+    </div>
   </div>
-  <div class="side-sheet-body">
+  <div class="side-sheet-body" id="sheetBody">
 
     <div style="margin-bottom:20px;">
       <div class="archetype-label exec">Executive Decision Makers</div>
     </div>
 
-    <div class="persona-card">
+    <div class="persona-card" id="sp-daniel">
       <div class="persona-card-top">
         <div class="persona-card-identity">
           <div class="persona-avatar" style="background:linear-gradient(135deg,#F40000,#b00000)">D</div>
@@ -817,7 +831,7 @@
       </div>
     </div>
 
-    <div class="persona-card">
+    <div class="persona-card" id="sp-camila">
       <div class="persona-card-top">
         <div class="persona-card-identity">
           <div class="persona-avatar" style="background:linear-gradient(135deg,#B59E74,#7a6030)">C</div>
@@ -843,7 +857,7 @@
       <div class="archetype-label ops">Operational Managers</div>
     </div>
 
-    <div class="persona-card">
+    <div class="persona-card" id="sp-marco">
       <div class="persona-card-top">
         <div class="persona-card-identity">
           <div class="persona-avatar" style="background:linear-gradient(135deg,#FF560E,#d4611a)">M</div>
@@ -869,7 +883,7 @@
       <div class="archetype-label analyst">Analytical Power Users</div>
     </div>
 
-    <div class="persona-card">
+    <div class="persona-card" id="sp-sarah">
       <div class="persona-card-top">
         <div class="persona-card-identity">
           <div class="persona-avatar" style="background:linear-gradient(135deg,#6AC9CE,#3A8388)">S</div>
@@ -891,7 +905,7 @@
       </div>
     </div>
 
-    <div class="persona-card">
+    <div class="persona-card" id="sp-elena">
       <div class="persona-card-top">
         <div class="persona-card-identity">
           <div class="persona-avatar" style="background:linear-gradient(135deg,#6ACE7F,#3d8a4e)">E</div>
@@ -1033,6 +1047,8 @@
   const sheet = document.getElementById('personaSheet');
   const overlay = document.getElementById('sheetOverlay');
   const closeBtn = document.getElementById('sheetClose');
+  const sheetNav = document.getElementById('sheetNav');
+  const sheetBody = document.getElementById('sheetBody');
 
   function openSheet(){
     sheet.classList.add('open');
@@ -1056,6 +1072,29 @@
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && sheet.classList.contains('open')) closeSheet();
   });
+
+  // Sheet nav: scroll to persona
+  sheetNav.addEventListener('click', function(e){
+    const navBtn = e.target.closest('button[data-target]');
+    if(!navBtn) return;
+    sheetNav.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    navBtn.classList.add('active');
+    const target = document.getElementById(navBtn.dataset.target);
+    if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  // Highlight nav on scroll
+  const personaIds = ['sp-daniel','sp-camila','sp-marco','sp-sarah','sp-elena'];
+  sheetBody.addEventListener('scroll', function(){
+    let current = personaIds[0];
+    for(const id of personaIds){
+      const el = document.getElementById(id);
+      if(el && el.offsetTop - sheetBody.scrollTop <= 80) current = id;
+    }
+    sheetNav.querySelectorAll('button').forEach(b => {
+      b.classList.toggle('active', b.dataset.target === current);
+    });
+  }, {passive: true});
 })();
 </script>
 </body>
