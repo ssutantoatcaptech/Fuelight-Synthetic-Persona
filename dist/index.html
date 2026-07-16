@@ -702,10 +702,189 @@
 <section class="sec-pad tab-content" id="tab-prediction-log">
   <div class="wrap">
 
-    <div class="content-card reveal" style="text-align:center;padding:80px 40px;">
-      <div style="font-size:48px;margin-bottom:16px;opacity:.4;">&#128203;</div>
-      <h2 style="margin-bottom:8px;">Coming Soon</h2>
-      <p style="max-width:480px;margin:0 auto;color:var(--muted);font-size:15px;line-height:1.6;">The Prediction Log will be populated after the first round of moderated and unmoderated user testing sessions. Each session will generate 3&ndash;5 logged predictions to calibrate and sharpen the synthetic personas over time.</p>
+    <div class="dl-callout reveal">
+      <div class="dl-callout-icon">&#128229;</div>
+      <div class="dl-callout-body">
+        <strong>Downloadable Materials</strong>
+        <p style="margin:4px 0 0;">The full working ledger (27 worked examples, blank fill-in sheet, auto-scoring scorecard, and round log) lives in the Excel workbook:</p>
+        <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;">
+          <a href="Persona-Prediction-Ledger.xlsx" download class="dl-callout-link">Prediction Ledger (.xlsx)</a>
+          <a href="Bulk-Edit-Side-Panel-Persona-Assessment.docx" download class="dl-callout-link">Full Assessment (.docx)</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>The Loop</h2>
+      <p>Three steps, repeated after each user test. The gap between prediction and reality <em>is</em> the learning signal.</p>
+      <div class="principle-row">
+        <div class="principle-num">1</div>
+        <div class="principle-text">
+          <h4>Predict</h4>
+          <p>Before a test, log one row per prediction &mdash; persona, a specific and falsifiable predicted behavior, and your confidence (High / Medium / Low).</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num">2</div>
+        <div class="principle-text">
+          <h4>Compare</h4>
+          <p>After the test, fill Actual behavior, pick the Delta, and note the Persona update needed.</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num">3</div>
+        <div class="principle-text">
+          <h4>Version</h4>
+          <p>End of each round: apply the updates, bump the persona version, and add a Round Log row. Accuracy climbs over time (54% &rarr; 75% &rarr; 89% in the worked example).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>Delta Types</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px;">
+        <span class="delta-badge delta-correct">Correct</span>
+        <span class="delta-badge delta-under">Underestimated</span>
+        <span class="delta-badge delta-over">Overestimated</span>
+        <span class="delta-badge delta-wrong">Wrong Axis</span>
+        <span class="delta-badge delta-surprise">Surprising</span>
+      </div>
+      <div class="persona-table-wrap" style="margin-top:16px;">
+        <table class="persona-table" style="min-width:500px;">
+          <thead><tr><th>Delta</th><th>Meaning</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><span class="delta-badge delta-correct">Correct</span></td><td>Real users behaved as predicted</td><td>No change needed</td></tr>
+            <tr><td><span class="delta-badge delta-under">Underestimated</span></td><td>Users did more, cared more, or were more capable</td><td>Add or strengthen the trait</td></tr>
+            <tr><td><span class="delta-badge delta-over">Overestimated</span></td><td>Users did less, cared less, or were less demanding</td><td>Soften or lower the trait</td></tr>
+            <tr><td><span class="delta-badge delta-wrong">Wrong Axis</span></td><td>Right behavior, wrong reason or dimension</td><td>Fix the "why" behind it</td></tr>
+            <tr><td><span class="delta-badge delta-surprise">Surprising</span></td><td>Users did something no persona predicted</td><td>Add a net-new trait</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>Worked Examples</h2>
+      <p>A sample from the full 27-row ledger. Each row is a specific, falsifiable prediction logged <em>before</em> a test.</p>
+      <div class="log-table-wrap">
+        <table class="log-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Persona</th>
+              <th>Predicted Behavior</th>
+              <th>Conf.</th>
+              <th>Feature</th>
+              <th>Actual Behavior</th>
+              <th>Delta</th>
+              <th>Persona Update</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>P-01</td>
+              <td>Daniel</td>
+              <td>Can't restate the scenario in one line from the panel &mdash; asks an analyst for the "what this says" before MBR/IC.</td>
+              <td>High</td>
+              <td>Side Panel (CXP)</td>
+              <td>All 3 exec reviewers asked an analyst to summarize before MBR; none self-served the story.</td>
+              <td><span class="delta-badge delta-correct">Correct</span></td>
+              <td>Confirmed &mdash; build the scenario-narrative headline.</td>
+            </tr>
+            <tr>
+              <td>P-05</td>
+              <td>Camila</td>
+              <td>Won't sign off &mdash; can't see why +10% (no benchmark or data source attached).</td>
+              <td>High</td>
+              <td>Side Panel (CXP)</td>
+              <td>Finance reviewer refused to approve a rule with no rationale attached &mdash; exactly as predicted.</td>
+              <td><span class="delta-badge delta-correct">Correct</span></td>
+              <td>Confirmed &mdash; rationale field is a gating requirement.</td>
+            </tr>
+            <tr>
+              <td>P-10</td>
+              <td>Marco</td>
+              <td>Finds the 5-step wizard too slow for a simple +2% &mdash; wants a ~3-click path.</td>
+              <td>High</td>
+              <td>Side Panel (Market)</td>
+              <td>4 of 5 finished the wizard, but all 5 asked for a faster repeat path; 1 abandoned mid-flow.</td>
+              <td><span class="delta-badge delta-over">Overestimated</span></td>
+              <td>Soften "abandons wizard" &mdash; completion is fine; real need is speed on repeat.</td>
+            </tr>
+            <tr>
+              <td>P-15</td>
+              <td>Sarah</td>
+              <td>Distrusts the flat +10% because it ignores adstock and diminishing returns.</td>
+              <td>High</td>
+              <td>Side Panel (Market)</td>
+              <td>Media tester immediately flagged that +10% ignores diminishing returns &mdash; verbatim.</td>
+              <td><span class="delta-badge delta-correct">Correct</span></td>
+              <td>Confirmed &mdash; curve-aware mode needed for media drivers.</td>
+            </tr>
+            <tr>
+              <td>P-16</td>
+              <td>Sarah</td>
+              <td>Looks for a link to Curves and won't trust linear math without it.</td>
+              <td>Medium</td>
+              <td>Side Panel (Market)</td>
+              <td>Wanted the response curve but didn't expect it inside this panel &mdash; fine with a link out.</td>
+              <td><span class="delta-badge delta-wrong">Wrong Axis</span></td>
+              <td>Right need, wrong form &mdash; it's curve transparency, not in-panel integration. A link suffices.</td>
+            </tr>
+            <tr>
+              <td>P-20</td>
+              <td>Elena</td>
+              <td>Finds the Jul&ndash;Oct horizon too short for annual / multi-year planning.</td>
+              <td>High</td>
+              <td>Side Panel (CXP)</td>
+              <td>Said the 4-month window made the tool unusable for annual planning &mdash; strong reaction.</td>
+              <td><span class="delta-badge delta-correct">Correct</span></td>
+              <td>Confirmed &mdash; multi-year horizon required for strategy use.</td>
+            </tr>
+            <tr>
+              <td>P-23</td>
+              <td>Elena</td>
+              <td>Finds the L1&ndash;L4 channel hierarchy too tactical vs. her portfolio / brand-combo lens.</td>
+              <td>Medium</td>
+              <td>Side Panel (CXP)</td>
+              <td>Navigated the hierarchy but wanted a portfolio / brand-combo layer on top.</td>
+              <td><span class="delta-badge delta-under">Underestimated</span></td>
+              <td>She needs more structure than predicted &mdash; add a portfolio grouping above the channel hierarchy.</td>
+            </tr>
+            <tr>
+              <td>P-25</td>
+              <td>Marco</td>
+              <td><em>(none &mdash; unpredicted)</em></td>
+              <td>&mdash;</td>
+              <td>Side Panel (Market)</td>
+              <td>Ops users tried to undo a bulk edit and expected edit history / rollback &mdash; no persona anticipated this.</td>
+              <td><span class="delta-badge delta-surprise">Surprising</span></td>
+              <td>Add "expects undo / rollback" to Marco (likely all operators).</td>
+            </tr>
+            <tr>
+              <td>P-26</td>
+              <td>Camila</td>
+              <td><em>(none &mdash; unpredicted)</em></td>
+              <td>&mdash;</td>
+              <td>Side Panel (CXP)</td>
+              <td>Finance reviewer asked who else had edited the scenario (multi-user attribution) &mdash; unforeseen.</td>
+              <td><span class="delta-badge delta-surprise">Surprising</span></td>
+              <td>Add "wants edit attribution &mdash; who changed what" to Camila.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-top:12px;">Showing 9 of 27 entries. Full ledger with all predictions, scoring, and round tracking available in the <a href="Persona-Prediction-Ledger.xlsx" download style="color:var(--tab-accent);font-weight:600;">Excel workbook</a>.</p>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>Scoring</h2>
+      <p><strong>Accuracy</strong> = Correct &divide; (all predictions except Surprising). Surprising sits outside &mdash; those are discoveries, not misses.</p>
+      <p><strong>Confidence</strong> is logged so you can catch over-confidence: a persona that's often High-confidence but wrong needs recalibrating, not just editing.</p>
+      <div class="highlight">
+        <strong>Example progression</strong>
+        Round 1: 54% accuracy &rarr; Round 2: 75% &rarr; Round 3: 89%. Each real test makes the next synthetic review more accurate.
+      </div>
     </div>
 
   </div>
