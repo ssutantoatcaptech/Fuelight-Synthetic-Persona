@@ -649,119 +649,16 @@
 <section class="sec-pad tab-content" id="tab-prediction-log">
   <div class="wrap">
 
-    <div class="dl-callout reveal">
-      <div class="dl-callout-icon">&#128229;</div>
-      <div class="dl-callout-body">
-        <strong>Downloadable Materials</strong>
-        <p style="margin:4px 0 0;">Grab the companion artifacts to use alongside this reference:</p>
-        <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;">
-          <a href="Persona-Prediction-Ledger.xlsx" download class="dl-callout-link">Prediction Ledger (.xlsx)</a>
-          <a href="Bulk-Edit-Side-Panel-Persona-Assessment.docx" download class="dl-callout-link">Full Assessment (.docx)</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="content-card reveal">
-      <h2>Synthetic Prediction Log</h2>
-      <p>After each real user test, log what the persona predicted vs. what the user actually did. The delta becomes the persona improvement signal. Track accuracy over time to validate and sharpen the synthetic models.</p>
-      <div class="highlight">
-        <strong>Working tool</strong>
-        The structure below is for reference. The operational ledger &mdash; with auto-scoring, round tracking, and blank fill-in rows &mdash; lives in the <a href="Persona-Prediction-Ledger.xlsx" download style="color:var(--tab-accent);font-weight:700;text-decoration:underline;">Excel workbook</a>. Download it, fill it in after each session, and let the Scorecard sheet track calibration over time.
-      </div>
-
-      <h3>Delta Types</h3>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 20px;">
-        <span class="delta-badge delta-correct">Correct</span>
-        <span class="delta-badge delta-under">Underestimated</span>
-        <span class="delta-badge delta-over">Overestimated</span>
-        <span class="delta-badge delta-wrong">Wrong Axis</span>
-        <span class="delta-badge delta-surprise">Surprising</span>
-      </div>
-
-      <div class="log-table-wrap">
-        <table class="log-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Feature / Screen</th>
-              <th>Persona</th>
-              <th>Predicted Behavior</th>
-              <th>Actual Behavior</th>
-              <th>Delta</th>
-              <th>Persona Update Needed</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="color:var(--muted);font-style:italic;">example</td>
-              <td>Side Panel (Market)</td>
-              <td>Marco</td>
-              <td>Would skip methodology, apply in 3 clicks</td>
-              <td>Actually read driver hierarchy carefully before committing</td>
-              <td><span class="delta-badge delta-under">Underestimated</span></td>
-              <td>Add: "Marco validates driver selection even under time pressure"</td>
-            </tr>
-            <tr>
-              <td style="color:var(--muted);font-style:italic;">example</td>
-              <td>Side Panel (CXP)</td>
-              <td>Camila</td>
-              <td>Would block sign-off without full audit trail</td>
-              <td>Approved based on "was X" annotation alone for in-year tweaks</td>
-              <td><span class="delta-badge delta-over">Overestimated</span></td>
-              <td>Adjust: Trust bar is contextual &mdash; lower for tweaks, higher for IC</td>
-            </tr>
-            <tr>
-              <td style="color:var(--muted);font-style:italic;">example</td>
-              <td>Table view</td>
-              <td>Daniel</td>
-              <td>Would ignore weekly columns entirely</td>
-              <td>Scrolled through weeks looking for a specific dip mentioned in a meeting</td>
-              <td><span class="delta-badge delta-wrong">Wrong Axis</span></td>
-              <td>Add: "Daniel uses tables to validate a specific signal, not discover patterns"</td>
-            </tr>
-            <tr style="background:#fafaf8;">
-              <td colspan="7" style="text-align:center;color:var(--muted);font-style:italic;padding:24px;">Add rows after each real user testing session...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="content-card reveal">
-      <h2>How to Use This Log</h2>
-      <div class="principle-row">
-        <div class="principle-num">1</div>
-        <div class="principle-text">
-          <h4>After each real test</h4>
-          <p>Fill 3-5 rows per session. Mark "Correct" predictions too &mdash; they validate the persona model.</p>
-        </div>
-      </div>
-      <div class="principle-row">
-        <div class="principle-num">2</div>
-        <div class="principle-text">
-          <h4>Monthly review (or every 5 sessions)</h4>
-          <p>Filter by Delta &ne; Correct. Look for repeating patterns per persona. Update profiles in Persona Lab.</p>
-        </div>
-      </div>
-      <div class="principle-row">
-        <div class="principle-num">3</div>
-        <div class="principle-text">
-          <h4>Quarterly scoring</h4>
-          <p>Score each persona: % Correct out of total predictions. Below 60% accuracy = structural rewrite needed.</p>
-        </div>
-      </div>
-      <div class="principle-row">
-        <div class="principle-num">4</div>
-        <div class="principle-text">
-          <h4>The compounding effect</h4>
-          <p>Each real test makes the next synthetic review more accurate. The gap between prediction and reality <em>is</em> the learning.</p>
-        </div>
-      </div>
+    <div class="content-card reveal" style="text-align:center;padding:80px 40px;">
+      <div style="font-size:48px;margin-bottom:16px;opacity:.4;">&#128203;</div>
+      <h2 style="margin-bottom:8px;">Coming Soon</h2>
+      <p style="max-width:480px;margin:0 auto;color:var(--muted);font-size:15px;line-height:1.6;">The Prediction Log will be populated after the first round of moderated and unmoderated user testing sessions. Each session will generate 3&ndash;5 logged predictions to calibrate and sharpen the synthetic personas over time.</p>
     </div>
 
   </div>
 </section>
 
+<!--
 <section class="downloads-bar">
   <div class="wrap">
     <div class="downloads-inner">
@@ -782,6 +679,7 @@
     </div>
   </div>
 </section>
+-->
 
 <footer class="ft">
   <div class="wrap">
