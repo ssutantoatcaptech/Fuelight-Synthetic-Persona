@@ -196,15 +196,16 @@
   .persona-sheet-btn.active{background:var(--tab-accent);color:#fff;}
 
   /* Side sheet */
-  .side-sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s;}
-  .side-sheet-overlay.open{opacity:1;pointer-events:auto;}
-  .side-sheet{position:fixed;top:0;right:0;bottom:0;width:480px;max-width:90vw;background:#fff;z-index:210;box-shadow:-4px 0 24px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+  .side-sheet{position:fixed;top:0;right:0;bottom:0;width:480px;max-width:90vw;background:#fff;z-index:210;box-shadow:-4px 0 24px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1), width .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
   .side-sheet.open{transform:translateX(0);}
+  .side-sheet.expanded{width:720px;}
   .side-sheet-header{position:sticky;top:0;background:#fff;z-index:5;padding:20px 24px 0;border-bottom:1px solid var(--line);}
   .side-sheet-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .side-sheet-header-actions{display:flex;align-items:center;gap:6px;}
   .side-sheet-header h2{margin:0;font-size:18px;font-weight:700;color:var(--dark);}
-  .side-sheet-close{width:32px;height:32px;border-radius:6px;border:none;background:var(--panel);color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
-  .side-sheet-close:hover{background:var(--panel2);color:var(--text);}
+  .side-sheet-close,.side-sheet-expand{width:32px;height:32px;border-radius:6px;border:none;background:var(--panel);color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+  .side-sheet-close:hover,.side-sheet-expand:hover{background:var(--panel2);color:var(--text);}
+  .side-sheet-expand.active{background:var(--tab-accent-soft);color:var(--tab-accent);}
   .side-sheet-nav{display:flex;gap:4px;padding-bottom:12px;overflow-x:auto;}
   .side-sheet-nav button{font-size:12px;font-weight:600;padding:6px 12px;border:none;border-radius:5px;cursor:pointer;white-space:nowrap;transition:all .15s;background:transparent;color:var(--muted);}
   .side-sheet-nav button:hover{background:var(--panel);color:var(--text);}
@@ -214,6 +215,9 @@
   .side-sheet-body .persona-card-top{flex-direction:column;}
   .side-sheet-body .persona-card-identity{min-width:auto;}
   .side-sheet-body .persona-quote{border-left:none;border-top:1px solid var(--line);min-width:auto;}
+  .side-sheet.expanded .side-sheet-body .persona-card-top{flex-direction:row;}
+  .side-sheet.expanded .side-sheet-body .persona-card-identity{min-width:280px;}
+  .side-sheet.expanded .side-sheet-body .persona-quote{border-top:none;border-left:1px solid var(--line);min-width:280px;}
 
   /* Push layout when sheet is open */
   body.sheet-open{overflow:hidden;}
@@ -788,12 +792,14 @@
 </div><!-- /.page-wrapper -->
 
 <!-- Side Sheet: Persona Profiles -->
-<div class="side-sheet-overlay" id="sheetOverlay"></div>
 <div class="side-sheet" id="personaSheet">
   <div class="side-sheet-header">
     <div class="side-sheet-header-top">
       <h2>Persona Profiles</h2>
-      <button class="side-sheet-close" id="sheetClose" aria-label="Close">&times;</button>
+      <div class="side-sheet-header-actions">
+        <button class="side-sheet-expand" id="sheetExpand" aria-label="Expand" title="Expand view">&#8596;</button>
+        <button class="side-sheet-close" id="sheetClose" aria-label="Close">&times;</button>
+      </div>
     </div>
     <div class="side-sheet-nav" id="sheetNav">
       <button data-target="sp-daniel" class="active">Daniel</button>
@@ -1045,30 +1051,33 @@
 (function(){
   const btn = document.getElementById('personaSheetToggle');
   const sheet = document.getElementById('personaSheet');
-  const overlay = document.getElementById('sheetOverlay');
   const closeBtn = document.getElementById('sheetClose');
+  const expandBtn = document.getElementById('sheetExpand');
   const sheetNav = document.getElementById('sheetNav');
   const sheetBody = document.getElementById('sheetBody');
 
   function openSheet(){
     sheet.classList.add('open');
-    overlay.classList.add('open');
     document.body.classList.add('sheet-open');
     btn.classList.add('active');
   }
   function closeSheet(){
     sheet.classList.remove('open');
-    overlay.classList.remove('open');
+    sheet.classList.remove('expanded');
     document.body.classList.remove('sheet-open');
     btn.classList.remove('active');
+    expandBtn.classList.remove('active');
   }
 
   btn.addEventListener('click', function(){
     if(sheet.classList.contains('open')) closeSheet();
     else openSheet();
   });
-  overlay.addEventListener('click', closeSheet);
   closeBtn.addEventListener('click', closeSheet);
+  expandBtn.addEventListener('click', function(){
+    sheet.classList.toggle('expanded');
+    expandBtn.classList.toggle('active');
+  });
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && sheet.classList.contains('open')) closeSheet();
   });
