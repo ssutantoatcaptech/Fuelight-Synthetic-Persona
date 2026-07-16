@@ -443,6 +443,7 @@
           <thead>
             <tr>
               <th>Gap Theme</th>
+              <th style="text-align:left;min-width:240px;">Context</th>
               <th>Daniel</th>
               <th>Camila</th>
               <th>Marco</th>
@@ -451,20 +452,19 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Executive summary / narrative</td><td><span class="gap-dot primary">P</span></td><td><span class="gap-dot">S</span></td><td></td><td></td><td></td></tr>
-            <tr><td>Assumption audit trail</td><td></td><td><span class="gap-dot primary">P</span></td><td></td><td><span class="gap-dot">S</span></td><td></td></tr>
-            <tr><td>ABP / target variance view</td><td><span class="gap-dot primary">P</span></td><td><span class="gap-dot primary">P</span></td><td><span class="gap-dot">S</span></td><td></td><td><span class="gap-dot">S</span></td></tr>
-            <tr><td>Speed / fewer interaction steps</td><td></td><td></td><td><span class="gap-dot primary">P</span></td><td></td><td></td></tr>
-            <tr><td>Mobile access</td><td></td><td></td><td><span class="gap-dot primary">P</span></td><td></td><td></td></tr>
-            <tr><td>Non-linear / curve-aware math</td><td></td><td></td><td></td><td><span class="gap-dot primary">P</span></td><td></td></tr>
-            <tr><td>Scenario comparison</td><td></td><td></td><td></td><td><span class="gap-dot primary">P</span></td><td><span class="gap-dot">S</span></td></tr>
-            <tr><td>Multi-year time horizon</td><td></td><td></td><td></td><td></td><td><span class="gap-dot primary">P</span></td></tr>
-            <tr><td>Portfolio rebalancing</td><td></td><td></td><td></td><td></td><td><span class="gap-dot primary">P</span></td></tr>
-            <tr><td>Confidence / sensitivity indicators</td><td><span class="gap-dot">S</span></td><td><span class="gap-dot primary">P</span></td><td></td><td><span class="gap-dot primary">P</span></td><td></td></tr>
-            <tr><td>Shared / persistent scenarios</td><td></td><td></td><td></td><td><span class="gap-dot">S</span></td><td><span class="gap-dot primary">P</span></td></tr>
-            <tr><td>Rule justification / rationale</td><td><span class="gap-dot">S</span></td><td><span class="gap-dot primary">P</span></td><td></td><td></td><td></td></tr>
-            <tr><td>Quick-repeat / templates</td><td></td><td></td><td><span class="gap-dot primary">P</span></td><td></td><td></td></tr>
-            <tr><td>IC export artifact</td><td><span class="gap-dot primary">P</span></td><td><span class="gap-dot primary">P</span></td><td></td><td></td><td></td></tr>
+            <tr><td>Executive summary / narrative</td><td style="text-align:left;font-weight:400;font-size:12px;color:var(--muted);">The panel shows numbers but never tells the story &mdash; no one-liner for an MBR or IC.</td><td><span class="gap-dot primary">P</span></td><td><span class="gap-dot">S</span></td><td></td><td></td><td></td></tr>
+            <tr><td>Assumption audit trail</td><td style="text-align:left;font-weight:400;font-size:12px;color:var(--muted);">Rules show "+10%" but never record the benchmark or data source behind it.</td><td></td><td><span class="gap-dot primary">P</span></td><td></td><td><span class="gap-dot">S</span></td><td></td></tr>
+            <tr><td>ABP / target variance view</td><td style="text-align:left;font-weight:400;font-size:12px;color:var(--muted);">"Was X" compares to session baseline, not the plan &mdash; users need vs. ABP/target.</td><td><span class="gap-dot primary">P</span></td><td><span class="gap-dot primary">P</span></td><td><span class="gap-dot">S</span></td><td></td><td><span class="gap-dot">S</span></td></tr>
+            <tr><td>Speed / fewer interaction steps</td><td style="text-align:left;font-weight:400;font-size:12px;color:var(--muted);">5-step wizard = 8+ clicks for a simple change; operators need ~3 clicks to stay in flow.</td><td></td><td></td><td><span class="gap-dot primary">P</span></td><td></td><td></td></tr>
+            <tr><td>Non-linear / curve-aware math</td><td style="text-align:left;font-weight:400;font-size:12px;color:var(--muted);">Flat "+10%" ignores adstock, saturation, and diminishing returns on media.</td><td></td><td></td><td></td><td><span class="gap-dot primary">P</span></td><td></td></tr>
+            <tr><td>Scenario comparison</td><td style="text-align:left;font-weight:400;font-size:12px;color:var(--muted);">Can only work one scenario at a time; no side-by-side or diff view.</td><td></td><td></td><td></td><td><span class="gap-dot primary">P</span></td><td><span class="gap-dot">S</span></td></tr>
+            <tr><td>Multi-year time horizon</td><td style="text-align:left;font-weight:400;font-size:12px;color:var(--muted);">4-month scope makes the tool unusable for annual or long-range planning.</td><td></td><td></td><td></td><td></td><td><span class="gap-dot primary">P</span></td></tr>
+            <tr><td>Portfolio rebalancing</td><td style="text-align:left;font-weight:400;font-size:12px;color:var(--muted);">No "shift from Brand A to B" action &mdash; requires two separate manual edits.</td><td></td><td></td><td></td><td></td><td><span class="gap-dot primary">P</span></td></tr>
+            <tr><td>Confidence / sensitivity indicators</td><td style="text-align:left;font-weight:400;font-size:12px;color:var(--muted);">All adjusted cells look equally certain; no signal for high-risk or low-confidence drivers.</td><td><span class="gap-dot">S</span></td><td><span class="gap-dot primary">P</span></td><td></td><td><span class="gap-dot primary">P</span></td><td></td></tr>
+            <tr><td>Shared / persistent scenarios</td><td style="text-align:left;font-weight:400;font-size:12px;color:var(--muted);">Scenarios live in sessionStorage and vanish on refresh &mdash; can't name, share, or build on them.</td><td></td><td></td><td></td><td><span class="gap-dot">S</span></td><td><span class="gap-dot primary">P</span></td></tr>
+            <tr><td>Rule justification / rationale</td><td style="text-align:left;font-weight:400;font-size:12px;color:var(--muted);">No field to record "why" a rule was applied &mdash; makes post-hoc audit impossible.</td><td><span class="gap-dot">S</span></td><td><span class="gap-dot primary">P</span></td><td></td><td></td><td></td></tr>
+            <tr><td>Quick-repeat / templates</td><td style="text-align:left;font-weight:400;font-size:12px;color:var(--muted);">Can't save/reuse a rule config; repeating across brands means re-configuring from scratch.</td><td></td><td></td><td><span class="gap-dot primary">P</span></td><td></td><td></td></tr>
+            <tr><td>IC export artifact</td><td style="text-align:left;font-weight:400;font-size:12px;color:var(--muted);">No shareable output (PDF/slide) &mdash; users rebuild scenarios in Excel/slides before IC.</td><td><span class="gap-dot primary">P</span></td><td><span class="gap-dot primary">P</span></td><td></td><td></td><td></td></tr>
           </tbody>
         </table>
       </div>
