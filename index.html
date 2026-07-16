@@ -190,11 +190,37 @@
   .reveal{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;}
   .reveal.in{opacity:1;transform:none;}
   @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} .reveal{opacity:1;transform:none;transition:none;} }
-  @media(max-width:860px){.content-card{padding:24px 20px;} .steps-grid{grid-template-columns:1fr;} .persona-grid{grid-template-columns:1fr;} .downloads-inner{flex-direction:column;align-items:flex-start;}}
+  /* Persona sheet button */
+  .persona-sheet-btn{margin-left:auto;font-size:13px;font-weight:600;color:var(--tab-accent);background:var(--tab-accent-soft);border:1px solid rgba(255,90,19,.2);border-radius:6px;padding:7px 14px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+  .persona-sheet-btn:hover{background:var(--tab-accent);color:#fff;}
+  .persona-sheet-btn.active{background:var(--tab-accent);color:#fff;}
+
+  /* Side sheet */
+  .side-sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s;}
+  .side-sheet-overlay.open{opacity:1;pointer-events:auto;}
+  .side-sheet{position:fixed;top:0;right:0;bottom:0;width:480px;max-width:90vw;background:#fff;z-index:210;box-shadow:-4px 0 24px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  .side-sheet.open{transform:translateX(0);}
+  .side-sheet-header{position:sticky;top:0;background:#fff;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line);}
+  .side-sheet-header h2{margin:0;font-size:18px;font-weight:700;color:var(--dark);}
+  .side-sheet-close{width:32px;height:32px;border-radius:6px;border:none;background:var(--panel);color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+  .side-sheet-close:hover{background:var(--panel2);color:var(--text);}
+  .side-sheet-body{padding:24px;}
+  .side-sheet-body .persona-card{margin-bottom:20px;border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .side-sheet-body .persona-card-top{flex-direction:column;}
+  .side-sheet-body .persona-card-identity{min-width:auto;}
+  .side-sheet-body .persona-quote{border-left:none;border-top:1px solid var(--line);min-width:auto;}
+
+  /* Push layout when sheet is open */
+  body.sheet-open{overflow:hidden;}
+  body.sheet-open .page-wrapper{transform:translateX(-240px);transition:transform .35s cubic-bezier(.4,0,.2,1);}
+  .page-wrapper{transition:transform .35s cubic-bezier(.4,0,.2,1);}
+
+  @media(max-width:860px){.content-card{padding:24px 20px;} .steps-grid{grid-template-columns:1fr;} .persona-grid{grid-template-columns:1fr;} .downloads-inner{flex-direction:column;align-items:flex-start;} .side-sheet{width:100%;max-width:100%;} body.sheet-open .page-wrapper{transform:translateX(0);}}
 </style>
 </head>
 <body>
 
+<div class="page-wrapper">
 <div class="hero" id="top">
   <canvas id="dots"></canvas>
   <div class="hero-inner">
@@ -208,11 +234,11 @@
   <div class="wrap">
     <div class="filters" id="filters" role="tablist" aria-label="Review sections">
       <button class="chip active" data-tab="overview" role="tab" aria-selected="true" tabindex="0">Overview</button>
-      <button class="chip" data-tab="personas" role="tab" aria-selected="false" tabindex="-1">Personas</button>
       <button class="chip" data-tab="assessment" role="tab" aria-selected="false" tabindex="-1">Assessment</button>
       <button class="chip" data-tab="gaps" role="tab" aria-selected="false" tabindex="-1">Gap Analysis</button>
       <button class="chip" data-tab="next-steps" role="tab" aria-selected="false" tabindex="-1">Testing Plan</button>
       <button class="chip" data-tab="prediction-log" role="tab" aria-selected="false" tabindex="-1">Prediction Log Samples</button>
+      <button class="persona-sheet-btn" id="personaSheetToggle" type="button">Persona Profiles</button>
     </div>
   </div>
 </div>
@@ -220,6 +246,16 @@
 <!-- TAB: Overview -->
 <section class="sec-pad tab-content active" id="tab-overview">
   <div class="wrap">
+
+    <div class="content-card reveal" style="border-left:3px solid var(--tab-accent);">
+      <h2 style="font-size:16px;margin-bottom:10px;">Initial Ask</h2>
+      <p style="margin:0 0 12px;font-size:14px;line-height:1.6;">Before investing in moderated or unmoderated user testing, stress-test the <strong>Bulk Edit Side Panel</strong> (CXP &amp; Market) through synthetic personas grounded in real Fuelight discovery interviews. Identify what problems are worth solving and what's missing &mdash; so sessions are focused on validating, not discovering.</p>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;margin-top:12px;">
+        <span><strong style="color:var(--text);">Feature:</strong> Quick Edit (Bulk Edit Side Panel)</span>
+        <span><strong style="color:var(--text);">Testing:</strong> Moderated sessions in progress &middot; Unmoderated TBD</span>
+        <span><strong style="color:var(--text);">Method:</strong> Tier 1 &mdash; Synthetic (AI persona review, internal)</span>
+      </div>
+    </div>
 
     <div class="content-card reveal">
       <h2>The Core Design Gap</h2>
@@ -295,336 +331,54 @@
   </div>
 </section>
 
-<!-- TAB: Personas -->
-<section class="sec-pad tab-content" id="tab-personas">
-  <div class="wrap">
-
-    <div class="content-card reveal" style="padding:28px 32px;">
-      <p style="margin:0;font-size:15px;color:var(--text);line-height:1.6;">Five personas grounded in real Fuelight discovery interviews, grouped by how they engage with the Bulk Edit workflow. Each quote is drawn from K4SU research sessions.</p>
-    </div>
-
-    <!-- Executive Decision Makers -->
-    <div class="archetype-group reveal">
-      <div class="archetype-label exec">Executive Decision Makers</div>
-      <div class="persona-grid">
-
-        <div class="persona-card">
-          <div class="persona-card-top">
-            <div class="persona-card-identity">
-              <div class="persona-avatar" style="background:linear-gradient(135deg,#F40000,#b00000)">D</div>
-              <div class="persona-card-meta">
-                <h3>Daniel</h3>
-                <div class="pc-role">VP, Franchise Operations</div>
-                <div class="pc-tags">
-                  <span class="pc-tag">Senior decision-maker</span>
-                  <span class="pc-tag">ABP owner</span>
-                  <span class="pc-tag">IC submitter</span>
-                </div>
-              </div>
-            </div>
-            <div class="persona-quote">
-              <blockquote>"Make it executive-readable and I'll engage. I won't run the model myself &mdash; I care whether I can take the output into an MBR and defend it."</blockquote>
-            </div>
-          </div>
-          <div class="persona-card-body">
-            <div class="pc-section">
-              <div class="pc-section-label">Decision Routines</div>
-              <div class="pc-section-text">Monthly Business Review &middot; OU Investment Committee &middot; Weekly volume connect &middot; Annual planning with the Bottler</div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Key Metrics</div>
-              <div class="pc-metrics">
-                <span class="pc-metric">Volume</span>
-                <span class="pc-metric">Revenue / NSR</span>
-                <span class="pc-metric">Dollar share</span>
-                <span class="pc-metric">SOVI</span>
-                <span class="pc-metric">W+</span>
-                <span class="pc-metric">ROI</span>
-              </div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Top Pain Points</div>
-              <div class="pc-section-text">
-                <ul>
-                  <li>Key trends buried in over-detailed scorecards</li>
-                  <li>Fund movements take 6&ndash;8 weeks &mdash; window closes</li>
-                  <li>IC cases built on gut, not data</li>
-                </ul>
-              </div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Literacy</div>
-              <div class="pc-literacy">High business acumen, low analytical depth. Speaks in market story and Bottler relationships. Needs to trust without understanding every parameter.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="persona-card">
-          <div class="persona-card-top">
-            <div class="persona-card-identity">
-              <div class="persona-avatar" style="background:linear-gradient(135deg,#B59E74,#7a6030)">C</div>
-              <div class="persona-card-meta">
-                <h3>Camila</h3>
-                <div class="pc-role">Senior Director, Finance</div>
-                <div class="pc-tags">
-                  <span class="pc-tag">IC gatekeeper</span>
-                  <span class="pc-tag">E-rate owner</span>
-                  <span class="pc-tag">Adoption validator</span>
-                </div>
-              </div>
-            </div>
-            <div class="persona-quote">
-              <blockquote>"My first question is always: what assumptions does this rest on, and can I audit them? If I can't answer that, I can't sign off."</blockquote>
-            </div>
-          </div>
-          <div class="persona-card-body">
-            <div class="pc-section">
-              <div class="pc-section-label">Decision Routines</div>
-              <div class="pc-section-text">Annual DME allocation &middot; IC validation &middot; YTD/QTD/MTD reporting &middot; Bottler Joint Business Planning &middot; Quarterly E-rate reviews</div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Key Metrics</div>
-              <div class="pc-metrics">
-                <span class="pc-metric">E-rate</span>
-                <span class="pc-metric">OI</span>
-                <span class="pc-metric">NSR</span>
-                <span class="pc-metric">Creation:activation</span>
-                <span class="pc-metric">DME by channel</span>
-              </div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Top Pain Points</div>
-              <div class="pc-section-text">
-                <ul>
-                  <li>Assumption opacity blocks adoption</li>
-                  <li>Creation:activation ratio completely unmeasured</li>
-                  <li>Bottler DFR only ~70% visible in-year</li>
-                </ul>
-              </div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Literacy</div>
-              <div class="pc-literacy">Highest trust bar of all five. Stress-tests assumptions and benchmarks. If Camila won't sign off, the IC won't move.</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Operational Managers -->
-    <div class="archetype-group reveal">
-      <div class="archetype-label ops">Operational Managers</div>
-      <div class="persona-grid">
-
-        <div class="persona-card">
-          <div class="persona-card-top">
-            <div class="persona-card-identity">
-              <div class="persona-avatar" style="background:linear-gradient(135deg,#FF560E,#d4611a)">M</div>
-              <div class="persona-card-meta">
-                <h3>Marco</h3>
-                <div class="pc-role">Director, Franchise Operations</div>
-                <div class="pc-tags">
-                  <span class="pc-tag">Core power user</span>
-                  <span class="pc-tag">DFR owner</span>
-                  <span class="pc-tag">Runs tool weekly</span>
-                </div>
-              </div>
-            </div>
-            <div class="persona-quote">
-              <blockquote>"Let's keep this short &mdash; I've got a weekly connect in an hour. I need to know if I should move, and I need to move now."</blockquote>
-            </div>
-          </div>
-          <div class="persona-card-body">
-            <div class="pc-section">
-              <div class="pc-section-label">Decision Routines</div>
-              <div class="pc-section-text">Weekly volume connect &middot; Monthly scorecard review &middot; Pre-execution go/no-go &middot; Trigger-point activations &middot; IC submissions</div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Key Metrics</div>
-              <div class="pc-metrics">
-                <span class="pc-metric">Volume</span>
-                <span class="pc-metric">W+ / HH pen.</span>
-                <span class="pc-metric">Dollar share</span>
-                <span class="pc-metric">SOVI</span>
-                <span class="pc-metric">DFR ROI</span>
-                <span class="pc-metric">NSR</span>
-              </div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Top Pain Points</div>
-              <div class="pc-section-text">
-                <ul>
-                  <li>Power BI takes 45 min to populate</li>
-                  <li>Moving funds is "art and a conversation"</li>
-                  <li>No post-mortem to build institutional knowledge</li>
-                </ul>
-              </div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Literacy</div>
-              <div class="pc-literacy">Moderate. Operational, not analytical. Notices instantly if outputs contradict market reality. Wants fast answers before the window closes.</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Analytical Power Users -->
-    <div class="archetype-group reveal">
-      <div class="archetype-label analyst">Analytical Power Users</div>
-      <div class="persona-grid">
-
-        <div class="persona-card">
-          <div class="persona-card-top">
-            <div class="persona-card-identity">
-              <div class="persona-avatar" style="background:linear-gradient(135deg,#6AC9CE,#3A8388)">S</div>
-              <div class="persona-card-meta">
-                <h3>Sarah</h3>
-                <div class="pc-role">Director, Media / IMX</div>
-                <div class="pc-tags">
-                  <span class="pc-tag">Highest data literacy</span>
-                  <span class="pc-tag">Methodology hawk</span>
-                </div>
-              </div>
-            </div>
-            <div class="persona-quote">
-              <blockquote>"I'll push back if the methodology isn't clear. We use agency models most often when they support a recommendation we already want to make."</blockquote>
-            </div>
-          </div>
-          <div class="persona-card-body">
-            <div class="pc-section">
-              <div class="pc-section-label">Decision Routines</div>
-              <div class="pc-section-text">In-year media reallocation &middot; Media IC cases &middot; Channel mix planning &middot; Reach/response-curve analysis &middot; Agency model reviews</div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Key Metrics</div>
-              <div class="pc-metrics">
-                <span class="pc-metric">Channel ROI</span>
-                <span class="pc-metric">Reach &amp; freq.</span>
-                <span class="pc-metric">Adstock</span>
-                <span class="pc-metric">Brand equity</span>
-                <span class="pc-metric">Synergy</span>
-              </div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Top Pain Points</div>
-              <div class="pc-section-text">
-                <ul>
-                  <li>Agency models annual, core brands only, "directional"</li>
-                  <li>No offline halo or cross-channel visibility</li>
-                  <li>Brand equity absent &mdash; can't justify equity vs. activation</li>
-                </ul>
-              </div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Literacy</div>
-              <div class="pc-literacy">Analytically precise. Challenges adstock assumptions and data coverage gaps. More patient than the GM, but more technically exacting.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="persona-card">
-          <div class="persona-card-top">
-            <div class="persona-card-identity">
-              <div class="persona-avatar" style="background:linear-gradient(135deg,#6ACE7F,#3d8a4e)">E</div>
-              <div class="persona-card-meta">
-                <h3>Elena</h3>
-                <div class="pc-role">Senior Director, Strategy</div>
-                <div class="pc-tags">
-                  <span class="pc-tag">LRP/ABP owner</span>
-                  <span class="pc-tag">Portfolio trade-offs</span>
-                </div>
-              </div>
-            </div>
-            <div class="persona-quote">
-              <blockquote>"My main question for any new feature is whether it changes what goes into the annual plan, or whether it just explains what already happened."</blockquote>
-            </div>
-          </div>
-          <div class="persona-card-body">
-            <div class="pc-section">
-              <div class="pc-section-label">Decision Routines</div>
-              <div class="pc-section-text">Annual &amp; long-range planning &middot; Brand/country-combo prioritisation &middot; Cross-functional alignment &middot; Portfolio trade-offs &middot; Scenario planning</div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Key Metrics</div>
-              <div class="pc-metrics">
-                <span class="pc-metric">Portfolio ROI</span>
-                <span class="pc-metric">Brand health</span>
-                <span class="pc-metric">LT vs. ST value</span>
-                <span class="pc-metric">NSR / OI at plan</span>
-              </div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Top Pain Points</div>
-              <div class="pc-section-text">
-                <ul>
-                  <li>Fuelight explains the past, doesn't shape the forward plan</li>
-                  <li>Short-term ROI vs. brand health &mdash; "no exact science"</li>
-                  <li>Cross-functional alignment is largely manual</li>
-                </ul>
-              </div>
-            </div>
-            <div class="pc-section">
-              <div class="pc-section-label">Literacy</div>
-              <div class="pc-literacy">Strategic and structured. Thinks in planning cycles and portfolio trade-offs. Asks whether outputs are forward-looking or just retrospective.</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-</section>
-
 <!-- TAB: Persona Assessment -->
 <section class="sec-pad tab-content" id="tab-assessment">
   <div class="wrap">
 
     <div class="content-card reveal">
-      <h2>Cross-Persona Assessment Table</h2>
-      <p>Three questions per persona: what they'd try to do, what would frustrate them, and what's missing from the current design.</p>
-      <div class="persona-table-wrap">
-        <table class="persona-table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Daniel <span class="persona-role">VP Franchise Ops</span></th>
-              <th>Camila <span class="persona-role">Sr. Dir Finance</span></th>
-              <th>Marco <span class="persona-role">Dir Franchise Ops</span></th>
-              <th>Sarah <span class="persona-role">Dir Media/IMX</span></th>
-              <th>Elena <span class="persona-role">Sr. Dir Strategy</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>What would this user be trying to do?</strong></td>
-              <td>Review the <em>output</em> of bulk edits. Take the scenario into an MBR or IC submission and defend it in under 60 seconds without an analyst.</td>
-              <td>Audit what assumptions a rule rests on. Validate the YTG/Scenario projections are financially credible enough to approve an IC reserve request.</td>
-              <td>Open the panel mid-meeting, quickly adjust projections (+2% Distribution for Fanta at Asda), stack a few rules, save, and move on before the activation window closes.</td>
-              <td>Model what-if scenarios for media channel reallocation. Validate whether the math respects adstock and diminishing returns. Compare scenarios side-by-side.</td>
-              <td>Scenario modelling for the annual plan &mdash; "shift portfolio weight from Sprite to Coke Zero across H2." Feed the result into the LRP/ABP cycle.</td>
-            </tr>
-            <tr>
-              <td><strong>What would confuse or frustrate them?</strong></td>
-              <td>Wall of numbers with no narrative. Rules tracker says "Adjust +10%" not "This closes 2.3% of the volume gap." No ABP variance. No export for IC.</td>
-              <td>No audit trail per rule &mdash; no benchmark, no data source. Corner badges (A/F/C/B) are cryptic. "Was X" shows vs. session baseline, not vs. target. No confidence indicators.</td>
-              <td>5-step wizard = 8+ interactions for a simple change. Panel auto-closes after apply. No rule reuse. No mobile path. Historicals and projections look the same.</td>
-              <td>"Adjust +10%" is naive flat math for media with adstock/saturation. No link to Curves tab. No scenario comparison. No methodology per driver.</td>
-              <td>Only 4 months of time scope &mdash; she thinks multi-year. No "shift from Brand A to B" action. Scenarios vanish on refresh. Driver hierarchy is tactical, not strategic.</td>
-            </tr>
-            <tr>
-              <td><strong>What's missing?</strong></td>
-              <td>Plain-English scenario summary. ABP/target variance column. Read-only review mode. One-click IC export (PDF/slide with assumptions).</td>
-              <td>Rule justification field. Confidence indicators per driver. Exportable audit log. Sensitivity flags. "Vs. ABP" column, not just "vs. before."</td>
-              <td>Quick-apply templates (save/reuse). Keep-panel-open mode. Impact summary before closing. Mobile-responsive layout. Conditional formatting (RAG indicators).</td>
-              <td>Non-linear/curve-aware adjustments. Scenario comparison view. Driver methodology card. Confidence bands. Cross-channel synergy flags. Data dictionary tooltips.</td>
-              <td>Multi-year time horizon. Portfolio rebalancing as first-class action. Forward impact on next year. Named/shared scenario library. Brand equity overlay.</td>
-            </tr>
-          </tbody>
-        </table>
+      <h2>Cross-Persona Assessment</h2>
+      <p>Three questions per persona, grouped by archetype: what they'd try to do, what frustrates them, and what's missing.</p>
+
+      <div class="archetype-group" style="margin-top:24px;">
+        <div class="archetype-label exec">Executive Decision Makers</div>
+        <div class="persona-table-wrap">
+          <table class="persona-table">
+            <thead><tr><th></th><th>Daniel <span class="persona-role">VP Franchise Ops</span></th><th>Camila <span class="persona-role">Sr. Dir Finance</span></th></tr></thead>
+            <tbody>
+              <tr><td><strong>What would they try to do?</strong></td><td>Review the <em>output</em> of bulk edits. Take the scenario into an MBR or IC submission and defend it in under 60 seconds.</td><td>Audit what assumptions a rule rests on. Validate projections are financially credible enough to approve an IC reserve request.</td></tr>
+              <tr><td><strong>What frustrates them?</strong></td><td>Wall of numbers with no narrative. "Adjust +10%" not "This closes 2.3% of the gap." No ABP variance. No export for IC.</td><td>No audit trail per rule. Corner badges cryptic. "Was X" shows vs. session baseline, not vs. target. No confidence indicators.</td></tr>
+              <tr><td><strong>What's missing?</strong></td><td>Plain-English summary. ABP/target variance column. Read-only review mode. One-click IC export with assumptions.</td><td>Rule justification field. Confidence indicators. Exportable audit log. Sensitivity flags. "Vs. ABP" column.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="archetype-group" style="margin-top:24px;">
+        <div class="archetype-label ops">Operational Managers</div>
+        <div class="persona-table-wrap">
+          <table class="persona-table">
+            <thead><tr><th></th><th>Marco <span class="persona-role">Dir Franchise Ops</span></th></tr></thead>
+            <tbody>
+              <tr><td><strong>What would they try to do?</strong></td><td>Open the panel mid-meeting, quickly adjust projections (+2% Distribution for Fanta at Asda), stack a few rules, save, and move on before the activation window closes.</td></tr>
+              <tr><td><strong>What frustrates them?</strong></td><td>5-step wizard = 8+ interactions for a simple change. Panel auto-closes after apply. No rule reuse. No mobile path. Historicals and projections look the same.</td></tr>
+              <tr><td><strong>What's missing?</strong></td><td>Quick-apply templates (save/reuse). Keep-panel-open mode. Impact summary before closing. Mobile-responsive layout. Conditional formatting (RAG).</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="archetype-group" style="margin-top:24px;">
+        <div class="archetype-label analyst">Analytical Power Users</div>
+        <div class="persona-table-wrap">
+          <table class="persona-table">
+            <thead><tr><th></th><th>Sarah <span class="persona-role">Dir Media/IMX</span></th><th>Elena <span class="persona-role">Sr. Dir Strategy</span></th></tr></thead>
+            <tbody>
+              <tr><td><strong>What would they try to do?</strong></td><td>Model what-if scenarios for media reallocation. Validate math respects adstock and diminishing returns. Compare side-by-side.</td><td>Scenario modelling for annual plan &mdash; "shift portfolio weight from Sprite to Coke Zero across H2." Feed into LRP/ABP cycle.</td></tr>
+              <tr><td><strong>What frustrates them?</strong></td><td>"Adjust +10%" is naive flat math for media with adstock/saturation. No scenario comparison. No methodology per driver.</td><td>Only 4 months of time scope. No "shift from Brand A to B" action. Scenarios vanish on refresh. Driver hierarchy is tactical.</td></tr>
+              <tr><td><strong>What's missing?</strong></td><td>Curve-aware adjustments. Scenario comparison view. Driver methodology card. Confidence bands. Cross-channel synergy flags.</td><td>Multi-year time horizon. Portfolio rebalancing. Forward impact on next year. Named/shared scenario library. Brand equity overlay.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -1026,6 +780,141 @@
     <small>Classified &ndash; Confidential &middot; Web is source of truth &middot; Last updated: July 16, 2026</small>
   </div>
 </footer>
+</div><!-- /.page-wrapper -->
+
+<!-- Side Sheet: Persona Profiles -->
+<div class="side-sheet-overlay" id="sheetOverlay"></div>
+<div class="side-sheet" id="personaSheet">
+  <div class="side-sheet-header">
+    <h2>Persona Profiles</h2>
+    <button class="side-sheet-close" id="sheetClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="side-sheet-body">
+
+    <div style="margin-bottom:20px;">
+      <div class="archetype-label exec">Executive Decision Makers</div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-card-top">
+        <div class="persona-card-identity">
+          <div class="persona-avatar" style="background:linear-gradient(135deg,#F40000,#b00000)">D</div>
+          <div class="persona-card-meta">
+            <h3>Daniel</h3>
+            <div class="pc-role">VP, Franchise Operations</div>
+            <div class="pc-tags"><span class="pc-tag">Senior decision-maker</span><span class="pc-tag">ABP owner</span><span class="pc-tag">IC submitter</span></div>
+          </div>
+        </div>
+        <div class="persona-quote">
+          <blockquote>"Make it executive-readable and I'll engage. I won't run the model myself &mdash; I care whether I can defend it in an MBR."</blockquote>
+        </div>
+      </div>
+      <div class="persona-card-body">
+        <div class="pc-section"><div class="pc-section-label">Routines</div><div class="pc-section-text">Monthly Business Review &middot; OU Investment Committee &middot; Weekly volume connect &middot; Annual planning</div></div>
+        <div class="pc-section"><div class="pc-section-label">Metrics</div><div class="pc-metrics"><span class="pc-metric">Volume</span><span class="pc-metric">Revenue / NSR</span><span class="pc-metric">Dollar share</span><span class="pc-metric">SOVI</span><span class="pc-metric">W+</span><span class="pc-metric">ROI</span></div></div>
+        <div class="pc-section"><div class="pc-section-label">Pain Points</div><div class="pc-section-text"><ul><li>Key trends buried in scorecards</li><li>Fund moves take 6&ndash;8 weeks</li><li>IC cases built on gut</li></ul></div></div>
+        <div class="pc-section"><div class="pc-section-label">Literacy</div><div class="pc-literacy">High business acumen, low analytical depth. Needs to trust without understanding every parameter.</div></div>
+      </div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-card-top">
+        <div class="persona-card-identity">
+          <div class="persona-avatar" style="background:linear-gradient(135deg,#B59E74,#7a6030)">C</div>
+          <div class="persona-card-meta">
+            <h3>Camila</h3>
+            <div class="pc-role">Senior Director, Finance</div>
+            <div class="pc-tags"><span class="pc-tag">IC gatekeeper</span><span class="pc-tag">E-rate owner</span><span class="pc-tag">Adoption validator</span></div>
+          </div>
+        </div>
+        <div class="persona-quote">
+          <blockquote>"What assumptions does this rest on, and can I audit them? If I can't answer that, I can't sign off."</blockquote>
+        </div>
+      </div>
+      <div class="persona-card-body">
+        <div class="pc-section"><div class="pc-section-label">Routines</div><div class="pc-section-text">Annual DME allocation &middot; IC validation &middot; YTD/QTD/MTD reporting &middot; Bottler JBP &middot; E-rate reviews</div></div>
+        <div class="pc-section"><div class="pc-section-label">Metrics</div><div class="pc-metrics"><span class="pc-metric">E-rate</span><span class="pc-metric">OI</span><span class="pc-metric">NSR</span><span class="pc-metric">Creation:activation</span><span class="pc-metric">DME by channel</span></div></div>
+        <div class="pc-section"><div class="pc-section-label">Pain Points</div><div class="pc-section-text"><ul><li>Assumption opacity blocks adoption</li><li>Creation:activation unmeasured</li><li>Bottler DFR ~70% visible</li></ul></div></div>
+        <div class="pc-section"><div class="pc-section-label">Literacy</div><div class="pc-literacy">Highest trust bar. Stress-tests assumptions and benchmarks. If Camila won't sign off, the IC won't move.</div></div>
+      </div>
+    </div>
+
+    <div style="margin:28px 0 20px;">
+      <div class="archetype-label ops">Operational Managers</div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-card-top">
+        <div class="persona-card-identity">
+          <div class="persona-avatar" style="background:linear-gradient(135deg,#FF560E,#d4611a)">M</div>
+          <div class="persona-card-meta">
+            <h3>Marco</h3>
+            <div class="pc-role">Director, Franchise Operations</div>
+            <div class="pc-tags"><span class="pc-tag">Core power user</span><span class="pc-tag">DFR owner</span><span class="pc-tag">Runs tool weekly</span></div>
+          </div>
+        </div>
+        <div class="persona-quote">
+          <blockquote>"I've got a weekly connect in an hour. I need to know if I should move, and I need to move now."</blockquote>
+        </div>
+      </div>
+      <div class="persona-card-body">
+        <div class="pc-section"><div class="pc-section-label">Routines</div><div class="pc-section-text">Weekly volume connect &middot; Monthly scorecard &middot; Pre-execution go/no-go &middot; Trigger-point activations &middot; IC submissions</div></div>
+        <div class="pc-section"><div class="pc-section-label">Metrics</div><div class="pc-metrics"><span class="pc-metric">Volume</span><span class="pc-metric">W+ / HH pen.</span><span class="pc-metric">Dollar share</span><span class="pc-metric">SOVI</span><span class="pc-metric">DFR ROI</span><span class="pc-metric">NSR</span></div></div>
+        <div class="pc-section"><div class="pc-section-label">Pain Points</div><div class="pc-section-text"><ul><li>Power BI takes 45 min to populate</li><li>Moving funds is "art and a conversation"</li><li>No post-mortem framework</li></ul></div></div>
+        <div class="pc-section"><div class="pc-section-label">Literacy</div><div class="pc-literacy">Moderate. Operational, not analytical. Notices instantly if outputs contradict market reality.</div></div>
+      </div>
+    </div>
+
+    <div style="margin:28px 0 20px;">
+      <div class="archetype-label analyst">Analytical Power Users</div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-card-top">
+        <div class="persona-card-identity">
+          <div class="persona-avatar" style="background:linear-gradient(135deg,#6AC9CE,#3A8388)">S</div>
+          <div class="persona-card-meta">
+            <h3>Sarah</h3>
+            <div class="pc-role">Director, Media / IMX</div>
+            <div class="pc-tags"><span class="pc-tag">Highest data literacy</span><span class="pc-tag">Methodology hawk</span></div>
+          </div>
+        </div>
+        <div class="persona-quote">
+          <blockquote>"I'll push back if the methodology isn't clear. Show me what data this uses and what's missing."</blockquote>
+        </div>
+      </div>
+      <div class="persona-card-body">
+        <div class="pc-section"><div class="pc-section-label">Routines</div><div class="pc-section-text">In-year media reallocation &middot; Media IC cases &middot; Channel mix planning &middot; Reach/response-curve analysis</div></div>
+        <div class="pc-section"><div class="pc-section-label">Metrics</div><div class="pc-metrics"><span class="pc-metric">Channel ROI</span><span class="pc-metric">Reach &amp; freq.</span><span class="pc-metric">Adstock</span><span class="pc-metric">Brand equity</span><span class="pc-metric">Synergy</span></div></div>
+        <div class="pc-section"><div class="pc-section-label">Pain Points</div><div class="pc-section-text"><ul><li>Agency models annual, "directional"</li><li>No cross-channel visibility</li><li>Brand equity absent</li></ul></div></div>
+        <div class="pc-section"><div class="pc-section-label">Literacy</div><div class="pc-literacy">Analytically precise. Challenges adstock assumptions and data coverage gaps.</div></div>
+      </div>
+    </div>
+
+    <div class="persona-card">
+      <div class="persona-card-top">
+        <div class="persona-card-identity">
+          <div class="persona-avatar" style="background:linear-gradient(135deg,#6ACE7F,#3d8a4e)">E</div>
+          <div class="persona-card-meta">
+            <h3>Elena</h3>
+            <div class="pc-role">Senior Director, Strategy</div>
+            <div class="pc-tags"><span class="pc-tag">LRP/ABP owner</span><span class="pc-tag">Portfolio trade-offs</span></div>
+          </div>
+        </div>
+        <div class="persona-quote">
+          <blockquote>"Does this change what goes into the annual plan, or does it just explain what already happened?"</blockquote>
+        </div>
+      </div>
+      <div class="persona-card-body">
+        <div class="pc-section"><div class="pc-section-label">Routines</div><div class="pc-section-text">Annual &amp; long-range planning &middot; Brand/country prioritisation &middot; Cross-functional alignment &middot; Scenario planning</div></div>
+        <div class="pc-section"><div class="pc-section-label">Metrics</div><div class="pc-metrics"><span class="pc-metric">Portfolio ROI</span><span class="pc-metric">Brand health</span><span class="pc-metric">LT vs. ST value</span><span class="pc-metric">NSR / OI at plan</span></div></div>
+        <div class="pc-section"><div class="pc-section-label">Pain Points</div><div class="pc-section-text"><ul><li>Fuelight explains the past only</li><li>Short-term ROI vs. brand health</li><li>Cross-functional alignment manual</li></ul></div></div>
+        <div class="pc-section"><div class="pc-section-label">Literacy</div><div class="pc-literacy">Strategic. Thinks in planning cycles and portfolio trade-offs. Asks whether outputs are forward-looking.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <button class="top" id="toTop" aria-label="Back to top">&#8593;</button>
 
@@ -1136,6 +1025,37 @@
   new IntersectionObserver(entries => {
     shell.classList.toggle('stuck', !entries[0].isIntersecting);
   }, { threshold: 0 }).observe(sentinel);
+})();
+
+// Side sheet
+(function(){
+  const btn = document.getElementById('personaSheetToggle');
+  const sheet = document.getElementById('personaSheet');
+  const overlay = document.getElementById('sheetOverlay');
+  const closeBtn = document.getElementById('sheetClose');
+
+  function openSheet(){
+    sheet.classList.add('open');
+    overlay.classList.add('open');
+    document.body.classList.add('sheet-open');
+    btn.classList.add('active');
+  }
+  function closeSheet(){
+    sheet.classList.remove('open');
+    overlay.classList.remove('open');
+    document.body.classList.remove('sheet-open');
+    btn.classList.remove('active');
+  }
+
+  btn.addEventListener('click', function(){
+    if(sheet.classList.contains('open')) closeSheet();
+    else openSheet();
+  });
+  overlay.addEventListener('click', closeSheet);
+  closeBtn.addEventListener('click', closeSheet);
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && sheet.classList.contains('open')) closeSheet();
+  });
 })();
 </script>
 </body>
