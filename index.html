@@ -244,8 +244,7 @@
   <div class="wrap">
     <div class="filters" id="filters" role="tablist" aria-label="Review sections">
       <button class="chip active" data-tab="overview" role="tab" aria-selected="true" tabindex="0">Overview</button>
-      <button class="chip" data-tab="assessment" role="tab" aria-selected="false" tabindex="-1">Assessment</button>
-      <button class="chip" data-tab="gaps" role="tab" aria-selected="false" tabindex="-1">Gap Analysis</button>
+      <button class="chip" data-tab="findings" role="tab" aria-selected="false" tabindex="-1">Findings</button>
       <button class="chip" data-tab="next-steps" role="tab" aria-selected="false" tabindex="-1">Testing Plan</button>
       <button class="chip" data-tab="prediction-log" role="tab" aria-selected="false" tabindex="-1">Prediction Log Samples</button>
       <button class="persona-sheet-btn" id="personaSheetToggle" type="button">Persona Profiles</button>
@@ -341,38 +340,64 @@
   </div>
 </section>
 
-<!-- TAB: Persona Assessment -->
-<section class="sec-pad tab-content" id="tab-assessment">
+<!-- TAB: Findings -->
+<section class="sec-pad tab-content" id="tab-findings">
   <div class="wrap">
 
     <div class="content-card reveal">
-      <h2>Common Patterns</h2>
+      <h2>Overarching Themes</h2>
+      <p>Three themes emerge across all five personas, regardless of archetype. These are the structural problems the tool doesn't solve today.</p>
+      <div class="principle-row">
+        <div class="principle-num" style="background:var(--red-soft);color:var(--red);">A</div>
+        <div class="principle-text">
+          <h4>The tool edits numbers but never explains what they mean</h4>
+          <p>Every persona &mdash; from the VP who needs a one-liner for IC, to the analyst who needs methodology &mdash; hits the same wall: the panel shows <em>what changed</em> but never <em>why it matters</em>. The narrative layer is completely absent.</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num" style="background:var(--orange-soft);color:var(--orange);">B</div>
+        <div class="principle-text">
+          <h4>Nothing is traceable, auditable, or defensible</h4>
+          <p>No rationale is captured, no benchmark is referenced, no confidence is signaled. Users can't defend a rule they applied, approve one someone else applied, or understand why a number moved. Trust requires transparency &mdash; and transparency is zero.</p>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="principle-num" style="background:var(--teal-soft);color:var(--teal);">C</div>
+        <div class="principle-text">
+          <h4>The tool exists in a single moment, not across a workflow</h4>
+          <p>Scenarios vanish on refresh. Rules can't be reused. Outputs can't be shared. The panel is a disposable scratch pad in a world where decisions need persistence, comparison, and collaboration across planning cycles.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card reveal">
+      <h2>Design Principles</h2>
       <div class="principle-row">
         <div class="principle-num">1</div>
         <div class="principle-text">
-          <h4>Everyone needs the "so what" &mdash; not just the "what changed"</h4>
-          <p>Every persona needs to understand the <em>meaning</em> of edits in their own terms. The tool stops at the mechanical layer and never rises to the narrative layer.</p>
+          <h4>Every number needs a reference point</h4>
+          <p>Show vs. target, vs. last year, vs. plan &mdash; never just the raw value.</p>
         </div>
       </div>
       <div class="principle-row">
         <div class="principle-num">2</div>
         <div class="principle-text">
-          <h4>Nobody trusts a number they can't trace back to a reason</h4>
-          <p>The tool lets you apply +10% but never asks or records <em>why</em> +10%. It's a calculator without a receipt.</p>
+          <h4>Every edit needs a rationale</h4>
+          <p>Capture <em>why</em>, not just <em>what</em>. Even a one-line text field transforms auditability.</p>
         </div>
       </div>
       <div class="principle-row">
         <div class="principle-num">3</div>
         <div class="principle-text">
-          <h4>The tool is a single-session scratch pad, not a planning system</h4>
-          <p>Scenarios live in sessionStorage and disappear on refresh. Can't name, share, compare, or build on them over time.</p>
+          <h4>The operator and the decision-maker see the same data differently</h4>
+          <p>Build one table, two modes: edit mode (Marco) and review mode (Daniel/Camila).</p>
         </div>
       </div>
       <div class="principle-row">
         <div class="principle-num">4</div>
         <div class="principle-text">
-          <h4>Speed vs. rigour is a false trade-off the design doesn't resolve</h4>
-          <p>Marco needs 3 clicks. Camila needs a full audit trail. These aren't opposed &mdash; they're different moments in the same workflow. Let Marco apply fast, let Camila audit later.</p>
+          <h4>Speed and rigour are sequential, not competing</h4>
+          <p>Fast to apply (Marco), auditable after the fact (Camila).</p>
         </div>
       </div>
     </div>
@@ -420,45 +445,6 @@
               <tr><td><strong>What's missing?</strong></td><td>Curve-aware adjustments. Scenario comparison view. Driver methodology card. Confidence bands. Cross-channel synergy flags.</td><td>Multi-year time horizon. Portfolio rebalancing. Forward impact on next year. Named/shared scenario library. Brand equity overlay.</td></tr>
             </tbody>
           </table>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- TAB: Gap Analysis -->
-<section class="sec-pad tab-content" id="tab-gaps">
-  <div class="wrap">
-
-    <div class="content-card reveal">
-      <h2>Design Principles (Derived from Gaps)</h2>
-      <div class="principle-row">
-        <div class="principle-num">1</div>
-        <div class="principle-text">
-          <h4>Every number needs a reference point</h4>
-          <p>Show vs. target, vs. last year, vs. plan &mdash; never just the raw value.</p>
-        </div>
-      </div>
-      <div class="principle-row">
-        <div class="principle-num">2</div>
-        <div class="principle-text">
-          <h4>Every edit needs a rationale</h4>
-          <p>Capture <em>why</em>, not just <em>what</em>. Even a one-line text field transforms auditability.</p>
-        </div>
-      </div>
-      <div class="principle-row">
-        <div class="principle-num">3</div>
-        <div class="principle-text">
-          <h4>The operator and the decision-maker see the same data differently</h4>
-          <p>Build one table, two modes: edit mode (Marco) and review mode (Daniel/Camila).</p>
-        </div>
-      </div>
-      <div class="principle-row">
-        <div class="principle-num">4</div>
-        <div class="principle-text">
-          <h4>Speed and rigour are sequential, not competing</h4>
-          <p>Fast to apply (Marco), auditable after the fact (Camila).</p>
         </div>
       </div>
     </div>
